@@ -1,4 +1,4 @@
 package Repository;
 
-public class UserRepositoryTest g{
+public class UserRepositoryTest {
 }
