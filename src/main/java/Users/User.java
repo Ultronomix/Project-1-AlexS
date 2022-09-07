@@ -1,4 +1,4 @@
-package Models;
+package Users;
 
 import java.util.Objects;
 

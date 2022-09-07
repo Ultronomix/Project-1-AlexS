@@ -1,7 +1,6 @@
 package Service;
 
-import Models.User;
-import Repository.UserRepository;
+import Users.User;
 
 public class UserService {
     private final UserRepository userRepository = new UserRepository();
