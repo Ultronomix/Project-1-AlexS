@@ -3,7 +3,7 @@ package Users;
 import java.util.Objects;
 
 public class User {
-    private String user_id;
+    private String id;
     private String username;
     private String email;
     private String password;
@@ -15,14 +15,14 @@ public class User {
     public User(){
 
     }
-    public User(String user_id, String username, String email, String password, String given_name, String surname, String is_active, String role_id) {
+    public User(String id, String username, String email, String password, String given_name, String surname, String is_active, String role_id) {
     }
     public String getUser_id() {
-        return user_id;
+        return id;
     }
 
-    public User setUser_id(String user_id) {
-        this.user_id = user_id;
+    public User setid(String id) {
+        this.id = id;
         return this;
     }
 
@@ -95,18 +95,18 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(user_id, user.user_id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(given_name, user.given_name) && Objects.equals(surname, user.surname) && Objects.equals(is_active, user.is_active) && Objects.equals(role_id, user.role_id);
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(given_name, user.given_name) && Objects.equals(surname, user.surname) && Objects.equals(is_active, user.is_active) && Objects.equals(role_id, user.role_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user_id, username, email, password, given_name, surname, is_active, role_id);
+        return Objects.hash(id, username, email, password, given_name, surname, is_active, role_id);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "user_id='" + user_id + '\'' +
+                "user_id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +

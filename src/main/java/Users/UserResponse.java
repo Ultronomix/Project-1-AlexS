@@ -2,7 +2,7 @@ package Users;
 
 public class UserResponse {
 
-   private String user_id;
+   private String id;
     private String username;
     private String email;
     private String password;
@@ -12,7 +12,7 @@ public class UserResponse {
     private String role_id;
 
     public UserResponse(User subject){
-        this.user_id = subject.getUser_id();
+        this.id = subject.getUser_id();
         this.given_name = subject.getUsername();
         this.email=subject.getEmail();
         this.password=subject.getPassword();
@@ -23,11 +23,11 @@ public class UserResponse {
     }
 
     public String getUser_id() {
-        return user_id;
+        return id;
     }
 
     public UserResponse setUser_id(String user_id) {
-        this.user_id = user_id;
+        this.id = user_id;
         return this;
     }
 
@@ -97,7 +97,7 @@ public class UserResponse {
     @Override
     public String toString() {
         return "UserResponse{" +
-                "user_id='" + user_id + '\'' +
+                "user_id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
