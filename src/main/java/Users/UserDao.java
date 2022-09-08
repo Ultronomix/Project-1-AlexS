@@ -2,6 +2,7 @@ package Users;
 
 
 import util.ConnectionUtility;
+import Exceptions.DataSourceException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -41,14 +42,23 @@ public class UserDao {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setObject(1, id);
             ResultSet rs = pstmt.executeQuery();
-            return mapResultSet(rs).stream().findfirst();
+            return mapResultSet(rs).stream().findFirst();
         } catch (SQLException e){
             e.printStackTrace();
             throw new DataSourceException(e);
         }
     }
-    public boolean isUsernameTaken(String username){
-        return findUserByUserame(username).isPresent();
+   public Optional<User> findUserByUsername(String username){
+        String sql = baseSelect + "WHERE au.username = ?";
+        try(Connection conn = ConnectionUtility.getInstance().getConnection()){
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            return mapResultSet(rs).stream().findFirst();
+        }catch (SQLException e){
+            throw new DataSourceException(e);
+        }
+
     }
     public Optional<User> findUserByEmail(String email){
         String sql = baseSelect + "WHERE au.email = ?";
@@ -57,9 +67,9 @@ public class UserDao {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, email);
             ResultSet rs = pstmt.executeQuery();
-            return mapResultSet(rs).stream().findfirst();
+            return mapResultSet(rs).stream().findFirst();
         }catch (SQLException e){
-            throw new DataSourceExecption(e);
+            throw new DataSourceException(e);
         }
 
     }
@@ -74,7 +84,7 @@ public class UserDao {
             pstmt.setString(1,username);
             pstmt.setString(2,password);
             ResultSet rs = pstmt.executeQuery();
-            return mapResultSet(rs).stream().findfirst();
+            return mapResultSet(rs).stream().findFirst();
         }catch (SQLException e){
             throw new DataSourceException(e);
         }
@@ -100,7 +110,7 @@ public class UserDao {
         } catch (SQLException e){
             log("ERROR",e.getMessage());
         }
-        log("INFO","Successfully persisted new used id:" + user+getId());
+        log("INFO","Successfully persisted new used id:" + user+getId());/// fix this
         return user.getId();
 
     }
