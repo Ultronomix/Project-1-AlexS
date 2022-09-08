@@ -1,4 +1,6 @@
 import Users.UserDao;
+import auth.AuthService;
+import auth.AuthServlet;
 import Users.UserService;
 import Users.UserServlet;
 import org.apache.catalina.LifecycleException;
