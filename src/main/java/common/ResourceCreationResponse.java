@@ -1,3 +1,5 @@
+package common;
+
 public class ResourceCreationResponse {
     private String resourceId;
 
@@ -21,4 +23,5 @@ public class ResourceCreationResponse {
     }
 
 }
+
 

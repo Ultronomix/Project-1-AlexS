@@ -1,7 +1,10 @@
 package Users;
+import Exceptions.DataSourceException;
+import Exceptions.InvalidRequestException;
+import Exceptions.ResourcePersistenceException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-// IMPORT EXECPTIONS, RESPONSE
+import common.ResourceCreationResponse;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -91,5 +94,6 @@ public class UserServlet extends HttpServlet {
             resp.getWriter().write(jsonMapper.writeValueAsString(errorResponse));
 
         }
-
+    }
+    }
 

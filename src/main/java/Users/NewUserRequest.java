@@ -1,10 +1,11 @@
 package Users;
 
-import org.omg.CORBA.Request;
+import common.Request;
+
 
 import java.util.UUID;
 
-public class NewUserRequest implements Request<User> {
+public class NewUserRequest implements Request <User>{
 
     private String givenName;
     private String surname;
@@ -72,7 +73,7 @@ public class NewUserRequest implements Request<User> {
     @Override
     public User extractEntity(){
         User extractedEntity = new User();
-        extractedEntity.setid(UUID.randomUUID().toString());
+        extractedEntity.setId(UUID.randomUUID().toString());
         extractedEntity.setGiven_name(this.givenName);
         extractedEntity.setSurname(this.surname);
         extractedEntity.setEmail(this.email);

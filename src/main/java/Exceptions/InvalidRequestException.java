@@ -1,4 +1,4 @@
-package common.Exceptions;
+package Exceptions;
 
 public class InvalidRequestException extends RuntimeException {
 
