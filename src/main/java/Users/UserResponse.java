@@ -12,7 +12,7 @@ public class UserResponse {
     private String role_id;
 
     public UserResponse(User subject){
-        this.id = subject.getUser_id();
+        this.id = subject.getId();
         this.given_name = subject.getUsername();
         this.email=subject.getEmail();
         this.password=subject.getPassword();
@@ -22,12 +22,12 @@ public class UserResponse {
         this.role_id=subject.getRole_id();
     }
 
-    public String getUser_id() {
+    public String getId() {
         return id;
     }
 
-    public UserResponse setUser_id(String user_id) {
-        this.id = user_id;
+    public UserResponse setId(String id) {
+        this.id = id;
         return this;
     }
 

@@ -17,7 +17,7 @@ public class User {
     }
     public User(String id, String username, String email, String password, String given_name, String surname, String is_active, String role_id) {
     }
-    public String getUser_id() {
+    public String getId() {
         return id;
     }
 
