@@ -12,81 +12,72 @@ public class User {
     private String is_active;
     private String role_id;
 
-    public User(){
 
-    }
-    public User(String id, String username, String email, String password, String given_name, String surname, String is_active, String role_id) {
-    }
     public String getId() {
         return id;
     }
 
-    public User setid(String id) {
+    public void setId(String id) {
         this.id = id;
-        return this;
     }
+
 
     public String getUsername() {
         return username;
     }
 
-    public User setUsername(String username) {
+    public void setUsername (String username) {
         this.username = username;
-        return this;
+
     }
 
     public String getEmail() {
         return email;
     }
 
-    public User setEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
-        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public User setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
-        return this;
+
     }
 
     public String getGiven_name() {
         return given_name;
     }
 
-    public User setGiven_name(String given_name) {
+    public void setGiven_name(String given_name) {
         this.given_name = given_name;
-        return this;
     }
 
     public String getSurname() {
         return surname;
     }
 
-    public User setSurname(String surname) {
+    public void setSurname(String surname) {
         this.surname = surname;
-        return this;
     }
 
     public String getIs_active() {
         return is_active;
     }
 
-    public User setIs_active(String is_active) {
+    public void setIs_active(String is_active) {
         this.is_active = is_active;
-        return this;
     }
 
     public String getRole_id() {
         return role_id;
     }
 
-    public User setRole_id(String role_id) {
+    public void setRole_id(String role_id) {
         this.role_id = role_id;
-        return this;
     }
 
 

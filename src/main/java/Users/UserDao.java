@@ -2,7 +2,7 @@ package Users;
 
 
 import util.ConnectionUtility;
-import Exceptions.DataSourceException;
+import common.Exceptions.DataSourceException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,7 +22,9 @@ public class UserDao {
             "ON au.role_id = ur.id ";
 
     public List<User>GetAllUsers(){
+
         List<User> allUsers = new ArrayList<>();
+
         try(Connection conn = ConnectionUtility.getInstance().getConnection()){
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(baseSelect);
@@ -36,7 +38,7 @@ public class UserDao {
         return allUsers;
     }
 
-    public Optional<User> findUserById(UUID id){
+    public Optional<User> findUserById (UUID id){
         String sql = baseSelect + "WHERE au.id = ?";
         try(Connection conn = ConnectionUtility.getInstance().getConnection()){
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -48,7 +50,7 @@ public class UserDao {
             throw new DataSourceException(e);
         }
     }
-   public Optional<User> findUserByUsername(String username){
+   public Optional<User> findUserByUsername (String username){
         String sql = baseSelect + "WHERE au.username = ?";
         try(Connection conn = ConnectionUtility.getInstance().getConnection()){
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -59,6 +61,9 @@ public class UserDao {
             throw new DataSourceException(e);
         }
 
+    }
+    public boolean isUsernameTaken(String username){
+        return findUserByUsername(username).isPresent();
     }
     public Optional<User> findUserByEmail(String email){
         String sql = baseSelect + "WHERE au.email = ?";
@@ -73,11 +78,10 @@ public class UserDao {
         }
 
     }
-
     public boolean isEmailTaken(String email){
         return findUserByEmail(email).isPresent();
     }
-    public Optional<User> findUserbyUsernameandPassword(String username,String password){
+    public Optional<User> findUserByUsernameAndPassword(String username,String password){
         String sql = baseSelect + "WHERE au.username = ? AND au.password = ?";
         try(Connection conn = ConnectionUtility.getInstance().getConnection()){
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -105,12 +109,12 @@ public class UserDao {
 
             ResultSet rs = pstmt.getGeneratedKeys();
             rs.next();
-            user.setid(rs.getNString("id"));
+            user.setId(rs.getNString("id"));
 
         } catch (SQLException e){
             log("ERROR",e.getMessage());
         }
-        log("INFO","Successfully persisted new used id:" + user+getId());/// fix this
+        log("INFO","Successfully persisted new used id:" + user.getId());/// fix this
         return user.getId();
 
     }
@@ -119,13 +123,13 @@ public class UserDao {
         List<User> users = new ArrayList<>();
         while (rs.next()) {
             User user = new User();
-            user.setid(rs.getString("id"));
+            user.setId(rs.getString("id"));
             user.setGiven_name(rs.getString("given_name"));
             user.setSurname(rs.getString("surname"));
             user.setEmail(rs.getString("email"));
             user.setUsername(rs.getString("username"));
             user.setPassword("***********"); // done for security purposes
-            user.setRole_id(new Role(rs.getString("role_id"), rs.getString("role")));
+            user.setRole_id(rs.getString("role_id"));
             users.add(user);
         }
         return users;
@@ -134,7 +138,7 @@ public class UserDao {
         try {
             File logFile = new File("logs/app.log");
             logFile.createNewFile();
-            BufferedWriter = new BufferedWriter(new FileWriter(logFile));
+            BufferedWriter logWriter = new BufferedWriter(new FileWriter(logFile));
             logWriter.write(String.format("[%s] at %s logged: [%s] %s\n", Thread.currentThread().getName(), LocalDate.now(), level.toUpperCase(), message));
             logWriter.flush();
         } catch (IOException e) {

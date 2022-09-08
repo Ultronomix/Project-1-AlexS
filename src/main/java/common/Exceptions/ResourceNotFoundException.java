@@ -1,4 +1,4 @@
-package Exceptions;
+package common.Exceptions;
 
 public class ResourceNotFoundException extends RuntimeException{
 

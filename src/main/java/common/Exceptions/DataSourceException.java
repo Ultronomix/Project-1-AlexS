@@ -1,4 +1,4 @@
-package Exceptions;
+package common.Exceptions;
 
 public class DataSourceException extends RuntimeException{
     public DataSourceException(Throwable cause){
