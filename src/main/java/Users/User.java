@@ -12,6 +12,20 @@ public class User {
     private String is_active;
     private String role_id;
 
+    public User(){
+        super();
+    }
+    public User(String id,String username,String email,String password,String given_name, String surname,String is_active, String role_id){
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this. password = password;
+        this.given_name = given_name;
+        this.surname = surname;
+        this.is_active = is_active;
+        this.role_id = role_id;
+    }
+
 
     public String getId() {
         return id;
@@ -93,6 +107,8 @@ public class User {
     public int hashCode() {
         return Objects.hash(id, username, email, password, given_name, surname, is_active, role_id);
     }
+
+
 
     @Override
     public String toString() {

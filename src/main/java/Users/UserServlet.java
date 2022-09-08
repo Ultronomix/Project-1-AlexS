@@ -1,14 +1,17 @@
 package Users;
 import Exceptions.DataSourceException;
 import Exceptions.InvalidRequestException;
+import Exceptions.ResourceNotFoundException;
 import Exceptions.ResourcePersistenceException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.ErrorResponse;
 import common.ResourceCreationResponse;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +29,21 @@ public class UserServlet extends HttpServlet {
         ObjectMapper jsonMapper = new ObjectMapper();
         resp.setContentType("application/json");
 
+        HttpSession userSession = req.getSession(false);
+        if (userSession == null){
+            resp.setStatus(401);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(401,"Requester not authenticated, please log in")));
+            return;
+        }
+
         String idToSearchFor = req.getParameter("id");
+
+        UserResponse requester =(UserResponse) userSession.getAttribute("authUser");
+        if (!requester.getRole_id().equals("DIRECTOR")&& !requester.getId().equals(idToSearchFor)){
+            resp.setStatus(403);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403,"Requester is not permitted to communicate with this endpoint")));
+            return;
+        }
 
         try {
             if (idToSearchFor == null) {
@@ -39,19 +56,18 @@ public class UserServlet extends HttpServlet {
 
         } catch (InvalidRequestException | JsonMappingException e) {
             resp.setStatus(400);
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("statuscode", 400);
-            errorResponse.put("message", e.getMessage());
-            errorResponse.put("timestamp", System.currentTimeMillis());
-            resp.getWriter().write(jsonMapper.writeValueAsString(errorResponse));
-        } catch (DataSourceException e) {
-            resp.setStatus(500);
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("statusCode", 500);
-            errorResponse.put("message", e.getMessage());
-            errorResponse.put("timestamp", System.currentTimeMillis());
-            resp.getWriter().write(jsonMapper.writeValueAsString(errorResponse));
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400, e.getMessage())));
 
+
+        }catch (ResourceNotFoundException e){
+            resp.setStatus(404);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400, e.getMessage())));
+
+
+
+        } catch (DataSourceException e) {
+           resp.setStatus(500);
+           resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400, e.getMessage())));
         }
     }
 
@@ -67,32 +83,18 @@ public class UserServlet extends HttpServlet {
 
         } catch (InvalidRequestException | JsonMappingException e) {
 
-
             resp.setStatus(400);
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("statusCode", 400);
-            errorResponse.put("message", e.getMessage());
-            errorResponse.put("timestamp", System.currentTimeMillis());
-            resp.getWriter().write(jsonMapper.writeValueAsString(errorResponse));
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400, e.getMessage())));
 
         } catch (ResourcePersistenceException e) {
 
-            resp.setStatus(409); // CONFLICT; indicates that the provided resource could not be saved without conflicting with other data
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("statusCode", 409);
-            errorResponse.put("message", e.getMessage());
-            errorResponse.put("timestamp", System.currentTimeMillis());
-            resp.getWriter().write(jsonMapper.writeValueAsString(errorResponse));
+           resp.setStatus(409);
+           resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(409, e.getMessage())));
 
         } catch (DataSourceException e) {
 
-            resp.setStatus(500); // INTERNAL SERVER ERROR; general error indicating a problem with the server
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("statusCode", 500);
-            errorResponse.put("message", e.getMessage());
-            errorResponse.put("timestamp", System.currentTimeMillis());
-            resp.getWriter().write(jsonMapper.writeValueAsString(errorResponse));
-
+            resp.setStatus(500);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(500, e.getMessage())));
         }
     }
     }

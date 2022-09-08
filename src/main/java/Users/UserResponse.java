@@ -1,5 +1,7 @@
 package Users;
 
+import java.util.Objects;
+
 public class UserResponse {
 
    private String id;
@@ -92,6 +94,20 @@ public class UserResponse {
     public UserResponse setRole_id(String role_id) {
         this.role_id = role_id;
         return this;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserResponse that = (UserResponse) o;
+        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(given_name, that.given_name) && Objects.equals(surname, that.surname) && Objects.equals(is_active, that.is_active) && Objects.equals(role_id, that.role_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, email, password, given_name, surname, is_active, role_id);
     }
 
     @Override
