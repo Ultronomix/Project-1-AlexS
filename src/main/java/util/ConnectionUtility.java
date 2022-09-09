@@ -1,22 +1,36 @@
 package util;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-
+import java.util.Properties;
 
 public class ConnectionUtility {
-    private static final String URL="jdbc:postgresql://localhost:5432/postgres?CurrentSchema=public";
-    private static final String USER="postgres";
-    private static final String PASSWORD="1234";
+    private static ConnectionUtility connectionUtility;
+    public static Properties dbProps = new Properties();
 
-    private static Connection instance;
-
-    public static Connection getInstance() throws SQLException{
-        if (instance == null || instance.isClosed()){
-            instance = DriverManager.getConnection(URL,USER,PASSWORD);
+    private ConnectionUtility(){
+        try {
+            Class.forName("org.postgresql.Driver");
+            dbProps.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties"));
+        }catch (IOException e){
+            throw new RuntimeException("could not read from properties file",e);
+        }catch (ClassNotFoundException e){
+            throw new RuntimeException("failed to load PostGreSQL driver",e);
         }
-        return instance;
     }
-    private ConnectionUtility(){}
+
+    public static ConnectionUtility getInstance(){
+        if (connectionUtility == null){
+            connectionUtility = new ConnectionUtility();
+        }
+        return connectionUtility;
+    }
+    public Connection getConnection() throws SQLException{
+        return DriverManager.getConnection(dbProps.getProperty("db-url"),dbProps.getProperty("db-username"), dbProps.getProperty("db-password"));
+    }
 }
+
+

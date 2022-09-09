@@ -25,7 +25,7 @@ public class UserDao {
 
         List<User> allUsers = new ArrayList<>();
 
-        try(Connection conn = ConnectionUtility.getInstance().getConnection()){
+        try (Connection conn  = ConnectionUtility.getInstance().getConnection()) {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(baseSelect);
 
@@ -97,7 +97,7 @@ public class UserDao {
     }
     public  String save(User user){
         String sql = "INSERT INTO app_users (given_name, surname, email, username, password, role_id) " +
-                "VALUES(?,?,?,?,?,?,'5a2e0415-ee08-440f-ab8a-778b37ff6874')";
+                "VALUES(?,?,?,?,?,?,'180ad0cf-328f-4abe-b9a6-5652f1e17da5')";
         try (Connection conn = ConnectionUtility.getInstance().getConnection()){
             PreparedStatement pstmt = conn.prepareStatement(sql, new String[]{"id"});
             pstmt.setString(1, user.getGiven_name());
