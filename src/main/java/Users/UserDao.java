@@ -16,9 +16,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class UserDao {
-    private final String baseSelect = "SELECT au.user_id, au.username, au.email, au.password, au.given_name, au.surname, au.is_active, au.role_id" +
-            "FROM app_users au"+
-            "JOIN user_roles ur"+
+    private final String baseSelect = "SELECT au.id, au.username, au.email, au.password, au.given_name, au.surname, au.is_active, au.role_id " +
+            "FROM app_users au "+
+            "JOIN user_roles ur "+
             "ON au.role_id = ur.id ";
 
     public List<User>GetAllUsers(){
@@ -90,6 +90,7 @@ public class UserDao {
             ResultSet rs = pstmt.executeQuery();
             return mapResultSet(rs).stream().findFirst();
         }catch (SQLException e){
+            e.printStackTrace();
             throw new DataSourceException(e);
         }
 
@@ -114,7 +115,7 @@ public class UserDao {
         } catch (SQLException e){
             log("ERROR",e.getMessage());
         }
-        log("INFO","Successfully persisted new used id:" + user.getId());/// fix this
+        log("INFO","Successfully persisted new used id:" + user.getId());
         return user.getId();
 
     }
@@ -128,7 +129,8 @@ public class UserDao {
             user.setSurname(rs.getString("surname"));
             user.setEmail(rs.getString("email"));
             user.setUsername(rs.getString("username"));
-            user.setPassword("***********"); // done for security purposes
+            user.setPassword("***********");
+            user.setIs_active(rs.getString("is_active"));
             user.setRole_id(rs.getString("role_id"));
             users.add(user);
         }

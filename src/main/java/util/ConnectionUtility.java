@@ -1,6 +1,6 @@
 package util;
 
-import java.io.FileInputStream;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,7 +14,7 @@ public class ConnectionUtility {
     private ConnectionUtility(){
         try {
             Class.forName("org.postgresql.Driver");
-            dbProps.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties"));
+            dbProps.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("db-config.properties"));
         }catch (IOException e){
             throw new RuntimeException("could not read from properties file",e);
         }catch (ClassNotFoundException e){

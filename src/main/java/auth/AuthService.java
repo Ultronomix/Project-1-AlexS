@@ -1,6 +1,6 @@
 package auth;
 
-import Exceptions.AuthenticationExecption;
+import Exceptions.AuthenticationException;
 import Exceptions.InvalidRequestException;
 import Users.UserDao;
 import Users.UserResponse;
@@ -31,7 +31,7 @@ public class AuthService {
 
         return userDAO.findUserByUsernameAndPassword(credentials.getUsername(), credentials.getPassword())
                 .map(UserResponse::new)
-                .orElseThrow(AuthenticationExecption::new);
+                .orElseThrow(AuthenticationException::new);
 
     }
 }

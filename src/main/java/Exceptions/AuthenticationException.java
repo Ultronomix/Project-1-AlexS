@@ -1,7 +1,7 @@
 package Exceptions;
 
-public class AuthenticationExecption  extends RuntimeException{
-    public AuthenticationExecption(){
+public class AuthenticationException extends RuntimeException{
+    public AuthenticationException(){
         super("Could not find a user account with the provided credentials");
     }
 }

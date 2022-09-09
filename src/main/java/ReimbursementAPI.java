@@ -13,7 +13,7 @@ public class ReimbursementAPI {
         Tomcat webServer = new Tomcat();
 
         webServer.setBaseDir(docBase);
-        webServer.setPort(5432);
+        webServer.setPort(5000);
         webServer.getConnector();
 
         UserDao userDao = new UserDao();
@@ -22,7 +22,7 @@ public class ReimbursementAPI {
         UserServlet userServlet = new UserServlet(userService);
         AuthServlet authServlet = new AuthServlet(authService);
 
-        final String rootContext = "/taskmaster";
+        final String rootContext = "/ers";
         webServer.addContext(rootContext,docBase);
         webServer.addServlet(rootContext,"UserServlet",userServlet).addMapping("/users");
         webServer.addServlet(rootContext,"AuthServlet", authServlet).addMapping("/auth");

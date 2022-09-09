@@ -15,7 +15,7 @@ public class UserResponse {
 
     public UserResponse(User subject){
         this.id = subject.getId();
-        this.given_name = subject.getUsername();
+        this.username = subject.getUsername();
         this.email=subject.getEmail();
         this.password=subject.getPassword();
         this.given_name=subject.getGiven_name();
