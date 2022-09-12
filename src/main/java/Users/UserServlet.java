@@ -30,18 +30,18 @@ public class UserServlet extends HttpServlet {
         resp.setContentType("application/json");
 
         HttpSession userSession = req.getSession(false);
-        if (userSession == null){
+        if (userSession == null) {
             resp.setStatus(401);
-            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(401,"Requester not authenticated, please log in")));
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(401, "Requester not authenticated, please log in")));
             return;
         }
 
         String idToSearchFor = req.getParameter("id");
 
-        UserResponse requester =(UserResponse) userSession.getAttribute("authUser");
-        if (!requester.getRole_id().equals("DIRECTOR")&& !requester.getId().equals(idToSearchFor)){
+        UserResponse requester = (UserResponse) userSession.getAttribute("authUser");
+        if (!requester.getRole_id().equals("DIRECTOR") && !requester.getId().equals(idToSearchFor)) {
             resp.setStatus(403);
-            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403,"Requester is not permitted to communicate with this endpoint")));
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403, "Requester is not permitted to communicate with this endpoint")));
             return;
         }
 
@@ -59,15 +59,14 @@ public class UserServlet extends HttpServlet {
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400, e.getMessage())));
 
 
-        }catch (ResourceNotFoundException e){
+        } catch (ResourceNotFoundException e) {
             resp.setStatus(404);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400, e.getMessage())));
 
 
-
         } catch (DataSourceException e) {
-           resp.setStatus(500);
-           resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400, e.getMessage())));
+            resp.setStatus(500);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400, e.getMessage())));
         }
     }
 
@@ -88,8 +87,8 @@ public class UserServlet extends HttpServlet {
 
         } catch (ResourcePersistenceException e) {
 
-           resp.setStatus(409);
-           resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(409, e.getMessage())));
+            resp.setStatus(409);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(409, e.getMessage())));
 
         } catch (DataSourceException e) {
 
@@ -97,5 +96,11 @@ public class UserServlet extends HttpServlet {
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(500, e.getMessage())));
         }
     }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getSession().invalidate();
     }
+}
+
 
