@@ -1,21 +1,22 @@
-package Registration;
+package Reimbursement;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class RegisterResponse  implements Serializable {
-    private String reimb_id;
-    private String amount;
-    private String submitted;
-    private String resolved;
-    private String description;
-    private String payment_id;
-    private String author_id;
-    private String resolver_id;
-    private String status_id;
-    private String type_id;
+public class ReimbursementResponse implements Serializable {
+        private String reimb_id;
+        private String amount;
+        private String submitted;
+        private String resolved;
+        private String description;
+        private String payment_id;
+        private String author_id;
+        private String resolver_id;
+        private String status_id;
+        private String type_id;
 
-    public RegisterResponse( Register subject){
+
+    public ReimbursementResponse( Reimbursement subject){
         this.reimb_id = reimb_id;
         this.amount = amount;
         this.submitted = submitted;
@@ -27,7 +28,6 @@ public class RegisterResponse  implements Serializable {
         this.status_id = status_id;
         this.type_id = type_id;
     }
-
     public String getReimb_id() {
         return reimb_id;
     }
@@ -116,7 +116,7 @@ public class RegisterResponse  implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RegisterResponse that = (RegisterResponse) o;
+        ReimbursementResponse that = (ReimbursementResponse) o;
         return Objects.equals(reimb_id, that.reimb_id) && Objects.equals(amount, that.amount) && Objects.equals(submitted, that.submitted) && Objects.equals(resolved, that.resolved) && Objects.equals(description, that.description) && Objects.equals(payment_id, that.payment_id) && Objects.equals(author_id, that.author_id) && Objects.equals(resolver_id, that.resolver_id) && Objects.equals(status_id, that.status_id) && Objects.equals(type_id, that.type_id);
     }
 
@@ -127,7 +127,7 @@ public class RegisterResponse  implements Serializable {
 
     @Override
     public String toString() {
-        return "RegisterResponse{" +
+        return "ReimbursementResponse{" +
                 "reimb_id='" + reimb_id + '\'' +
                 ", amount='" + amount + '\'' +
                 ", submitted='" + submitted + '\'' +

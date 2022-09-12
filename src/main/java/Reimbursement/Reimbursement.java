@@ -1,8 +1,9 @@
-package Registration;
+package Reimbursement;
 
 import java.util.Objects;
 
-public class Register {
+public class Reimbursement {
+
     private String reimb_id;
     private String amount;
     private String submitted;
@@ -14,28 +15,30 @@ public class Register {
     private String status_id;
     private String type_id;
 
-    public Register(){
+    public Reimbursement() {
         super();
     }
-    public Register(String reimb_id, String amount, String submitted,String resolved,String description,String payment_id,String author_id,String resolver_id,String status_id,String type_id){
+
+
+    public Reimbursement(String reimb_id, String amount, String submitted, String resolved, String description, String payment_id, String author_id, String resolver_id, String status_id, String type_id) {
         this.reimb_id = reimb_id;
         this.amount = amount;
         this.submitted = submitted;
         this.resolved = resolved;
         this.description = description;
         this.payment_id = payment_id;
-        this.author_id =author_id;
+        this.author_id = author_id;
         this.resolver_id = resolver_id;
         this.status_id = status_id;
         this.type_id = type_id;
-    }
 
+    }
 
     public String getReimb_id() {
         return reimb_id;
     }
 
-    public void setReimb_id (String reimb_id) {
+    public void setReimb_id(String reimb_id) {
         this.reimb_id = reimb_id;
     }
 
@@ -120,8 +123,8 @@ public class Register {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Register register = (Register) o;
-        return Objects.equals(reimb_id, register.reimb_id) && Objects.equals(amount, register.amount) && Objects.equals(submitted, register.submitted) && Objects.equals(resolved, register.resolved) && Objects.equals(description, register.description) && Objects.equals(payment_id, register.payment_id) && Objects.equals(author_id, register.author_id) && Objects.equals(resolver_id, register.resolver_id) && Objects.equals(status_id, register.status_id) && Objects.equals(type_id, register.type_id);
+        Reimbursement that = (Reimbursement) o;
+        return Objects.equals(reimb_id, that.reimb_id) && Objects.equals(amount, that.amount) && Objects.equals(submitted, that.submitted) && Objects.equals(resolved, that.resolved) && Objects.equals(description, that.description) && Objects.equals(payment_id, that.payment_id) && Objects.equals(author_id, that.author_id) && Objects.equals(resolver_id, that.resolver_id) && Objects.equals(status_id, that.status_id) && Objects.equals(type_id, that.type_id);
     }
 
     @Override
@@ -131,7 +134,7 @@ public class Register {
 
     @Override
     public String toString() {
-        return "Register{" +
+        return "Reimbursement{" +
                 "reimb_id='" + reimb_id + '\'' +
                 ", amount='" + amount + '\'' +
                 ", submitted='" + submitted + '\'' +

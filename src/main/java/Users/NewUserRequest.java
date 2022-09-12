@@ -81,6 +81,6 @@ public class NewUserRequest implements Request <User>{
         extractedEntity.setPassword(this.password);
         return extractedEntity;
 
-}
+    }
 
 }
