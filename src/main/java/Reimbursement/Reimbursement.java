@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Reimbursement {
 
-    private String reimb_id;
+    private String reimbursement_id;
     private String amount;
     private String submitted;
     private String resolved;
@@ -20,8 +20,8 @@ public class Reimbursement {
     }
 
 
-    public Reimbursement(String reimb_id, String amount, String submitted, String resolved, String description, String payment_id, String author_id, String resolver_id, String status_id, String type_id) {
-        this.reimb_id = reimb_id;
+    public Reimbursement(String reimbursement_id, String amount, String submitted, String resolved, String description, String payment_id, String author_id, String resolver_id, String status_id, String type_id) {
+        this.reimbursement_id = reimbursement_id;
         this.amount = amount;
         this.submitted = submitted;
         this.resolved = resolved;
@@ -34,12 +34,12 @@ public class Reimbursement {
 
     }
 
-    public String getReimb_id() {
-        return reimb_id;
+    public String getReimbursement_id() {
+        return reimbursement_id;
     }
 
-    public void setReimb_id(String reimb_id) {
-        this.reimb_id = reimb_id;
+    public void setReimbursement_id(String Reimbursement_id) {
+        this.reimbursement_id = reimbursement_id;
     }
 
     public String getAmount() {
@@ -124,18 +124,18 @@ public class Reimbursement {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reimbursement that = (Reimbursement) o;
-        return Objects.equals(reimb_id, that.reimb_id) && Objects.equals(amount, that.amount) && Objects.equals(submitted, that.submitted) && Objects.equals(resolved, that.resolved) && Objects.equals(description, that.description) && Objects.equals(payment_id, that.payment_id) && Objects.equals(author_id, that.author_id) && Objects.equals(resolver_id, that.resolver_id) && Objects.equals(status_id, that.status_id) && Objects.equals(type_id, that.type_id);
+        return Objects.equals(reimbursement_id, that.reimbursement_id) && Objects.equals(amount, that.amount) && Objects.equals(submitted, that.submitted) && Objects.equals(resolved, that.resolved) && Objects.equals(description, that.description) && Objects.equals(payment_id, that.payment_id) && Objects.equals(author_id, that.author_id) && Objects.equals(resolver_id, that.resolver_id) && Objects.equals(status_id, that.status_id) && Objects.equals(type_id, that.type_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(reimb_id, amount, submitted, resolved, description, payment_id, author_id, resolver_id, status_id, type_id);
+        return Objects.hash(reimbursement_id, amount, submitted, resolved, description, payment_id, author_id, resolver_id, status_id, type_id);
     }
 
     @Override
     public String toString() {
         return "Reimbursement{" +
-                "reimb_id='" + reimb_id + '\'' +
+                "reimbursement_id='" + reimbursement_id + '\'' +
                 ", amount='" + amount + '\'' +
                 ", submitted='" + submitted + '\'' +
                 ", resolved='" + resolved + '\'' +
