@@ -91,7 +91,7 @@ public class ReimbursementDao {
             //String sql = baseSelect + "WHERE au.id = ?";
             try(Connection conn = ConnectionUtility.getInstance().getConnection()){
                 PreparedStatement pstmt = conn.prepareStatement(sql);
-                pstmt.setObject(1, payment_id);
+                pstmt.setString(1, payment_id);
                 ResultSet rs = pstmt.executeQuery();
                 return mapResultSet(rs).stream().findFirst();
             } catch (SQLException e){

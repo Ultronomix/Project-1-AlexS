@@ -5,9 +5,13 @@ import Users.UserService;
 import Users.UserServlet;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 
 public class ReimbursementAPI {
+    private static Logger logger = LogManager.getLogger(ReimbursementAPI.class);
     public static void main(String[]args) throws LifecycleException{
         String docBase = System.getProperty("java.io.tmpdir");
         Tomcat webServer = new Tomcat();

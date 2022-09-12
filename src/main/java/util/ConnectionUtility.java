@@ -7,7 +7,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class ConnectionUtility {
+    private static Logger logger = LogManager.getLogger(ConnectionUtility.class);
     private static ConnectionUtility connectionUtility;
     public static Properties dbProps = new Properties();
 
