@@ -43,7 +43,7 @@ public class AuthServlet extends HttpServlet {
 
         } catch (InvalidRequestException | JsonMappingException e) {
 
-            // TODO encapsulate error response creation into its own utility method
+
             resp.setStatus(400);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400, e.getMessage())));
 
@@ -64,7 +64,7 @@ public class AuthServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getSession().invalidate();
-    }
+    }  // PUT THIS IN USER SERVLET
 
 }
 
