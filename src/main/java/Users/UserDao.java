@@ -94,7 +94,78 @@ public class UserDao {
             throw new DataSourceException(e);
         }
 
-
+    }
+    public String updateUserGiven_Name(String to, String id) {
+        String sql = "update\"user\"set given_name =? where id = ?;";
+        try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setBoolean(1, Boolean.parseBoolean(to));
+            pstmt.setInt(2, Integer.parseInt(id));
+            int rs = pstmt.executeUpdate();
+            return "User active status updated to " + to + ".Rows affected =" + rs;
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
+    }
+    public String updateUserSurname (String to, String id) {
+        String sql = "update\"user\"set surname =? where id = ?;";
+        try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setBoolean(1, Boolean.parseBoolean(to));
+            pstmt.setInt(2, Integer.parseInt(id));
+            int rs = pstmt.executeUpdate();
+            return "User active status updated to " + to + ".Rows affected =" + rs;
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
+    }
+    public String updateUserEmail (String to, String id){
+        String sql = "update\"user\"set email =? where id = ?;";
+        try (Connection conn = ConnectionUtility.getInstance().getConnection()){
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setBoolean(1,Boolean.parseBoolean(to));
+            pstmt.setInt(2,Integer.parseInt(id));
+            int rs = pstmt.executeUpdate();
+            return "User active status updated to "+ to +".Rows affected =" + rs;
+        } catch (SQLException e){
+            throw new DataSourceException(e);
+        }
+    }
+    public String updateUserPassword (String to ,String id) {
+        String sql = "update\"user\"set password =? where id = ?;";
+        try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setBoolean(1, Boolean.parseBoolean(to));
+            pstmt.setInt(2, Integer.parseInt(id));
+            int rs = pstmt.executeUpdate();
+            return "User active status updated to " + to + ".Rows affected =" + rs;
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
+    }
+    public String updateUserIs_Active (String to, String id) {
+        String sql = "update\"user\"set is_active =? where id = ?;";
+        try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setBoolean(1, Boolean.parseBoolean(to));
+            pstmt.setInt(2, Integer.parseInt(id));
+            int rs = pstmt.executeUpdate();
+            return "User active status updated to " + to + ".Rows affected =" + rs;
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
+    }
+    public String updateUserRole_Id (String to ,String id) {
+        String sql = "update\"user\"set role_id =? where id = ?;";
+        try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setBoolean(1, Boolean.parseBoolean(to));
+            pstmt.setInt(2, Integer.parseInt(id));
+            int rs = pstmt.executeUpdate();
+            return "User active status updated to " + to + ".Rows affected =" + rs;
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
     }
     public  String save(User user){
         String sql = "INSERT INTO app_users (given_name, surname, email, username, password, role_id) " +
@@ -146,5 +217,8 @@ public class UserDao {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    public boolean isIdVaild(String id){
+        return findUserById(UUID.fromString(id)).isPresent();
     }
 }

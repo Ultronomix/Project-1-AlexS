@@ -13,9 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
 
 public class UserServlet extends HttpServlet {
     private final UserService userService;
@@ -98,9 +97,68 @@ public class UserServlet extends HttpServlet {
     }
 
     @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException , IOException{
+        HttpSession userSession = req.getSession(false);
+        ObjectMapper jsonMapper = new ObjectMapper();
+        UserResponse loggedInUser =(UserResponse) userSession.getAttribute("loggedInUser");
+
+        if (userSession == null){
+            resp.setStatus(401);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(401,"please log in")));
+        return;
+    }
+        UserResponse loggedInUser1 = (UserResponse) userSession.getAttribute("loggedInUser");
+        boolean w = loggedInUser1.getRole_id().equals("admin");
+        if((!w)){
+            resp.setStatus(403);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403,"Requester is not permitted to communicate")));
+            return;
+        }
+
+        resp.setContentType("application/json");
+        String toBeUpdated = req.getParameter("update");
+        try {
+            UpdateRequestBody requestBody = jsonMapper.readValue(req.getInputStream(),UpdateRequestBody.class);
+
+            if (toBeUpdated.equals("given_name")){
+                ResourceCreationResponse generatedId = userService.updateGiven_name(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+            if (toBeUpdated.equals("surname")){
+                ResourceCreationResponse generatedId = userService.updateSurname(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+            if (toBeUpdated.equals("email")){
+                ResourceCreationResponse generatedId = userService.updateEmail(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+            if (toBeUpdated.equals("password")){
+                ResourceCreationResponse generatedId = userService.updatePassword(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+            if (toBeUpdated.equals("is_active")){
+                ResourceCreationResponse generatedId = userService.updateIs_Active(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+            if (toBeUpdated.equals("role_id")){
+                ResourceCreationResponse generatedId = userService.updateRole_Id(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+        }catch (InvalidRequestException | JsonMappingException e){
+            resp.setStatus(400);
+            ErrorResponse errorResponse = new ErrorResponse(400, e.getMessage());
+            resp.getWriter().write(jsonMapper.writeValueAsString(errorResponse));
+        } catch (DataSourceException e){
+            resp.setStatus(500);
+            ErrorResponse errorResponse = new ErrorResponse(500, e.getMessage());
+            resp.getWriter().write(jsonMapper.writeValueAsString(errorResponse));
+        }
+        }
+    @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getSession().invalidate();
     }
 }
+
 
 
