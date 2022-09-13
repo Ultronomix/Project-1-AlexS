@@ -41,7 +41,8 @@ public class ReimbursementService {
         if (newReimbursement == null) {
             throw new InvalidRequestException("Provided request payload was null.");
         }
-        if (newReimbursement)
-
+        if (newReimbursement.getGivenName() == null || newReimbursement.getGivenName().length() <= 0 ||
+                newReimbursement.getSurname() == null || newReimbursement.getSurname().length() <= 0)
     }
+
 }
