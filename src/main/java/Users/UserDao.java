@@ -1,6 +1,8 @@
 package Users;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import util.ConnectionUtility;
 import Exceptions.DataSourceException;
 
@@ -16,8 +18,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class UserDao {
+    private static Logger logger = LogManager.getLogger(UserDao.class);
     private final String baseSelect = "SELECT au.id, au.username, au.email, au.password, au.given_name, au.surname, au.is_active, au.role_id " +
-            "FROM app_users au "+
+            "FROM ers_users au "+
             "JOIN user_roles ur "+
             "ON au.role_id = ur.id ";
 
@@ -28,7 +31,6 @@ public class UserDao {
         try (Connection conn  = ConnectionUtility.getInstance().getConnection()) {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(baseSelect);
-
             allUsers = mapResultSet(rs);
 
         } catch (SQLException e){
@@ -87,11 +89,13 @@ public class UserDao {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1,username);
             pstmt.setString(2,password);
+            //System.out.println(username,password);
             ResultSet rs = pstmt.executeQuery();
             return mapResultSet(rs).stream().findFirst();
         }catch (SQLException e){
             e.printStackTrace();
             throw new DataSourceException(e);
+
         }
 
     }
@@ -168,7 +172,7 @@ public class UserDao {
         }
     }
     public  String save(User user){
-        String sql = "INSERT INTO app_users (given_name, surname, email, username, password, role_id) " +
+        String sql = "INSERT INTO ers_users (given_name, surname, email, username, password, role_id) " +
                 "VALUES(?,?,?,?,?,?,'180ad0cf-328f-4abe-b9a6-5652f1e17da5')";
         try (Connection conn = ConnectionUtility.getInstance().getConnection()){
             PreparedStatement pstmt = conn.prepareStatement(sql, new String[]{"id"});

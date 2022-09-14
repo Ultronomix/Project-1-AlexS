@@ -17,9 +17,9 @@ import java.time.LocalDate;
 public class ReimbursementDao{
 
     private final String baseSelect = "SELECT au.reimbursement_id,au.amount,au.submitted,au.resolved,au.description,au.payment_id,au.author_id,au.resolver_id,au.status_id " +
-    //  "FROM ers_users eu " +
-    //   "JOIN user_roles ur " +
-    //   ON au.role_id = ur.role_id "; // change this
+      "FROM ers_reimbursements eu " +
+       "JOIN reimbursements_roles ur "+
+    " ON au.role_id = ur.role_id ";
 
     public List<Reimbursement> GetAllReimbursement () {
         List<Reimbursement> allReimbursement = new ArrayList<>();
@@ -68,7 +68,7 @@ public class ReimbursementDao{
 
     public Optional<Reimbursement> findReimbursementBySubmitted(String submitted) {
 
-        String sql = baseSelect + //PUT TABLE HERE
+        String sql = baseSelect + "WHERE.au.submitted = ?";
 
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(sql);

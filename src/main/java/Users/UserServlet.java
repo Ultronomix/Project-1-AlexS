@@ -38,7 +38,7 @@ public class UserServlet extends HttpServlet {
         String idToSearchFor = req.getParameter("id");
 
         UserResponse requester = (UserResponse) userSession.getAttribute("authUser");
-        if (!requester.getRole_id().equals("DIRECTOR") && !requester.getId().equals(idToSearchFor)) {
+        if (!requester.getRole_id().equals("49ce5a1f-6b51-4e40-8e88-2bf9289292cd") && !requester.getRole_id().equals("b02a2f8a-36f2-4193-bcbd-2058d7628c31")){
             resp.setStatus(403);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403, "Requester is not permitted to communicate with this endpoint")));
             return;
