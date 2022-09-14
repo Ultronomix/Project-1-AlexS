@@ -2,8 +2,6 @@ package Reimbursement;
 
 import Exceptions.InvalidRequestException;
 import Exceptions.ResourceNotFoundException;
-import Reimbursement.UpdateRequestBodyO;
-import Users.User;
 import common.ResourceCreationResponse;
 
 import java.util.List;
@@ -76,7 +74,7 @@ public class ReimbursementService {
         if (updateRequestBodyO == null) {
             throw new InvalidRequestException("provided request not null");
         }
-        if (UpdateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
+        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
                 updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
             throw new InvalidRequestException("must provided name and user id");
         }
@@ -92,7 +90,7 @@ public class ReimbursementService {
         if (updateRequestBodyO == null) {
             throw new InvalidRequestException("provided request not null");
         }
-        if (UpdateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
+        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
                 updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
             throw new InvalidRequestException("must provided name and user id");
         }
@@ -108,7 +106,7 @@ public class ReimbursementService {
         if (updateRequestBodyO == null) {
             throw new InvalidRequestException("provided request not null");
         }
-        if (UpdateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
+        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
                 updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
             throw new InvalidRequestException("must provided name and user id");
         }
@@ -123,7 +121,7 @@ public class ReimbursementService {
         if (updateRequestBodyO == null) {
             throw new InvalidRequestException("provided request not null");
         }
-        if (UpdateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
+        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
                 updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
             throw new InvalidRequestException("must provided name and user id");
         }
@@ -138,7 +136,7 @@ public class ReimbursementService {
         if (updateRequestBodyO == null) {
             throw new InvalidRequestException("provided request not null");
         }
-        if (UpdateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
+        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
                 updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
             throw new InvalidRequestException("must provided name and user id");
         }
@@ -153,7 +151,7 @@ public class ReimbursementService {
         if (updateRequestBodyO == null) {
             throw new InvalidRequestException("provided request not null");
         }
-        if (UpdateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
+        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
                 updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
             throw new InvalidRequestException("must provided name and user id");
         }
@@ -168,7 +166,7 @@ public class ReimbursementService {
         if (updateRequestBodyO == null) {
             throw new InvalidRequestException("provided request not null");
         }
-        if (UpdateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
+        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
                 updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
             throw new InvalidRequestException("must provided name and user id");
         }
@@ -183,7 +181,7 @@ public class ReimbursementService {
         if (updateRequestBodyO == null) {
             throw new InvalidRequestException("provided request not null");
         }
-        if (UpdateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
+        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
                 updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
             throw new InvalidRequestException("must provided name and user id");
         }
@@ -193,19 +191,21 @@ public class ReimbursementService {
         String updateSuccessulMessage = reimbursementDao.updateReimbursement_Id(updateRequestBodyO.getUpdateto(), updateRequestBodyO.getReimbursementid());
         return new ResourceCreationResponse(updateSuccessulMessage);
     }
-    public ResourceCreationResponse updateType_Id (UpdateRequestBodyO updateRequestBodyO){
-        if (updateRequestBodyO == null){
+
+    public ResourceCreationResponse updateType_Id(UpdateRequestBodyO updateRequestBodyO) {
+        if (updateRequestBodyO == null) {
             throw new InvalidRequestException("provided request not null");
         }
-        if (UpdateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <=0 ||
-                updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length()<=0) {
+        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
+                updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
             throw new InvalidRequestException("must provided name and user id");
         }
-        if (!reimbursementDao.isIdVaild(updateRequestBodyO.getReimbursementid())){
+        if (!reimbursementDao.isIdVaild(updateRequestBodyO.getReimbursementid())) {
             throw new InvalidRequestException("must provide reim_id");
         }
-        String updateSuccessulMessage = reimbursementDao.updateReimbursement_Id(updateRequestBodyO.getUpdateto(),updateRequestBodyO.getReimbursementid());
+        String updateSuccessulMessage = reimbursementDao.updateReimbursement_Id(updateRequestBodyO.getUpdateto(), updateRequestBodyO.getReimbursementid());
         return new ResourceCreationResponse(updateSuccessulMessage);
+    }
 }
 
 

@@ -137,6 +137,20 @@ public class ReimbursementDao{
 
         }
     }
+    public String updateReimbursement_Id(String to,String id){
+        String sql ="update\"reimbursement\"set reimbursement_id =? where id=?;";
+        try (Connection conn = ConnectionUtility.getInstance().getConnection()){
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setBoolean(1,Boolean.parseBoolean(to));
+            pstmt.setInt(2,Integer.parseInt(id));
+            int rs= pstmt.executeUpdate();
+            return "Reim active status updaed to " + to + "Rows affected =" +rs;
+        }catch (SQLException e){
+            throw new DataSourceException(e);
+        }
+
+
+    }
 
     public String save(Reimbursement reimbursement) {
 
@@ -198,6 +212,10 @@ public class ReimbursementDao{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+}
+public boolean isIdVaild(String id){
+        return findReimbursementById(UUID.fromString(id)).isPresent();
 }
 }
 

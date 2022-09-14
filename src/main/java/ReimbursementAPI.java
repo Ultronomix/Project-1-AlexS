@@ -1,3 +1,6 @@
+import Reimbursement.ReimbursementDao;
+import Reimbursement.ReimbursementService;
+import Reimbursement.ReimbursementServlet;
 import Users.UserDao;
 import auth.AuthService;
 import auth.AuthServlet;
@@ -21,15 +24,19 @@ public class ReimbursementAPI {
         webServer.getConnector();
 
         UserDao userDao = new UserDao();
+        ReimbursementDao reimbursementDao = new ReimbursementDao();
         AuthService authService = new AuthService(userDao);
         UserService userService = new UserService(userDao);
+        ReimbursementService reimbursementService = new ReimbursementService(reimbursementDao);
         UserServlet userServlet = new UserServlet(userService);
         AuthServlet authServlet = new AuthServlet(authService);
+        ReimbursementServlet reimbursementServlet = new ReimbursementServlet(reimbursementService);
 
         final String rootContext = "/ers";
         webServer.addContext(rootContext,docBase);
         webServer.addServlet(rootContext,"UserServlet",userServlet).addMapping("/users");
         webServer.addServlet(rootContext,"AuthServlet", authServlet).addMapping("/auth");
+        webServer.addServlet(rootContext,"ReimbursementServlet",reimbursementServlet).addMapping("/reimbursement");
 
         webServer.start();
         webServer.getServer().await();
