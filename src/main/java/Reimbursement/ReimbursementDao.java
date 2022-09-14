@@ -16,19 +16,18 @@ import java.time.LocalDate;
 
 public class ReimbursementDao{
 
-    private String baseSelect = "SELECT au.reimbursement_id,au.amount,au.submitted,au.resolved,au.description,au.payment_id,au.author_id,au.resolver_id,au.status_id " +
+    private final String baseSelect = "SELECT au.reimbursement_id,au.amount,au.submitted,au.resolved,au.description,au.payment_id,au.author_id,au.resolver_id,au.status_id " +
     //  "FROM ers_users eu " +
     //   "JOIN user_roles ur " +
     //   ON au.role_id = ur.role_id "; // change this
 
-    public List<Reimbursement> getAllReimbursement() {
-        String sql = baseSelect;
+    public List<Reimbursement> GetAllReimbursement () {
         List<Reimbursement> allReimbursement = new ArrayList<>();
 
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
 
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery(baseSelect);
 
             allReimbursement = mapResultSet(rs);
         } catch (SQLException e) {

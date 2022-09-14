@@ -5,9 +5,11 @@ import Exceptions.DataSourceException;
 import Exceptions.InvalidRequestException;
 import Exceptions.ResourceNotFoundException;
 import Exceptions.ResourcePersistenceException;
+import Users.UpdateRequestBody;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.ErrorResponse;
+import common.ResourceCreationResponse;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,17 +38,16 @@ public class ReimbursementServlet extends HttpServlet {
             return;
         }
         String idToSearchFor = req.getParameter("id");
-        ReimbursementResponse requester = (ReimbursementResponse) reimbursementSession.getAttribute("");// add here
+        ReimbursementResponse requester = (ReimbursementResponse) reimbursementSession.getAttribute("authUser");
 
-        if (!isDirector(requester) && !requesterOwned(requester, idToSearchFor)) {
+        if (!requester.getReimbursement_id().equals("FINANCE MANAGER") && !requester.getReimbursement_id().equals(idToSearchFor)) {
             resp.setStatus(403);
-            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403, "request isnt permitted with endpoint")));
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403, "Requester is not permitted to communicate with this endpoint")));
             return;
         }
         try {
             if (idToSearchFor == null) {
                 List<ReimbursementResponse> allReimbursements = reimbursementService.getAllReimbursement();
-                resp.addHeader("X-MY-CUSTOM-HEADER", "some random value");
                 resp.getWriter().write(jsonMapper.writeValueAsString(allReimbursements));
             } else {
                 ReimbursementResponse foundReimbursement = reimbursementService.getReimbursementById(idToSearchFor);
@@ -70,10 +71,9 @@ public class ReimbursementServlet extends HttpServlet {
         resp.setContentType("application/json");
 
         try {
+            ResourceCreationResponse requestBody = reimbursementService
+                    .register(jsonMapper.readValue(req.getInputStream(), NewReimbursementRequest.class));
 
-            NewReimbursementRequest requestBody = jsonMapper.readValue(req.getInputStream(), NewReimbursementRequest.class);
-            ResourceCreationResponse responseBody = ReimbursementService.register(requestBody);
-            resp.getWriter().write(jsonMapper.writeValueAsString(responseBody));
         } catch (InvalidRequestException | JsonMappingException e) {
             resp.setStatus(400);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400, e.getMessage())));
@@ -89,76 +89,87 @@ public class ReimbursementServlet extends HttpServlet {
 
         }
     }
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException,IOException {
-        ObjectMapper jsonMapper = new ObjectMapper();
-        resp.setContentType("application/json");
-        HttpSession loggedInReimbursementSession = req.getSession(false);
 
-        if (loggedInReimbursementSession == null){
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ObjectMapper jsonMapper = new ObjectMapper();
+        HttpSession reimbursementSession = req.getSession(false);
+        resp.setContentType("application/json");
+        if (reimbursementSession == null) {
             resp.setStatus(401);
-            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(401,"please log in")));
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(401, "log in")));
             return;
         }
-        ReimbursementResponse loggedInReminbursement = (ReimbursementResponse) loggedInReimbursementSession.getAttribute("loggedInReminbursement");
-        boolean w = loggedInReminbursement.getRoleName().equals("manager");
-        if (!w)){
-    resp.setStatus(403);
-    resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403,"request isnt permitted to communicate with endpoint")));
-    return;
+        ReimbursementResponse reimbursementResponse = (ReimbursementResponse) reimbursementSession.getAttribute("loggedInReim");
+        boolean w = reimbursementResponse.getReimbursement_id().equals("FINANCE MANAGER");
+        if (!w) {
+            resp.setStatus(403);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403, "No communication")));
         }
-
-        resp.setContentType("application/json");
-String toBeUpdated = req.getParameter("update");
-
-try {
-    UpdateRequestBody requestBody = jsonMapper.readValue(req.getInputStream(), UpdateRequestBody.class);
-
-    if (toBeUpdated.equals("reimbursement_id")) {
-            ResponseString generatedId = reimbursementService.updateReimbursement_Id(requestBody);
-            resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-        }
-
-        if (toBeUpdated.equals("amount")) {
-            ResponseString generatedId = reimbursementService.updateAmount(requestBody);
-            resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-        }
-
-        if (toBeUpdated.equals("submitted")) {
-            ResponseString generatedId = reimbursementService.updateSubmitted(requestBody);
-            resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-        }
-
-        if (toBeUpdated.equals("resolved")) {
-            ResponseString generatedId = reimbursementService.updateResolved(requestBody);
-            resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-        }
-
-        if (toBeUpdated.equals("description")) {
-            ResponseString generatedId = reimbursementService.updateDescription(requestBody);
-            resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-        }
-
-        if (toBeUpdated.equals("author_id")) {
-            ResponseString generatedId = reimbursementService.updateAuthor_Id(requestBody);
-            resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-        }
-        if (toBeUpdated.equals("resolver_id")) {
-            ResponseString generatedId = reimbursementService.updateResolver_Id(requestBody);
-            resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-        }
-        if (toBeUpdated.equals("status_id")) {
-            ResponseString generatedId = reimbursementService.updateStatus_Id(requestBody);
-            resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+        resp.setContentType("appplication/json");
+        String toBeUpdated = req.getParameter("update");
+        try {
+            UpdateRequestBodyO requestBody = jsonMapper.readValue(req.getInputStream(), UpdateRequestBodyO.class);
 
 
+            if (toBeUpdated.equals("reimbursement_id")) {
+                ResourceCreationResponse generatedId = reimbursementService.updateReimbursement_Id(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+
+
+            if (toBeUpdated.equals("amount")) {
+                ResourceCreationResponse generatedId = reimbursementService.updateAmount(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+
+            if (toBeUpdated.equals("submitted")) {
+                ResourceCreationResponse generatedId = reimbursementService.updateSubmitted(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+
+            if (toBeUpdated.equals("resolved")) {
+                ResourceCreationResponse generatedId = reimbursementService.updateResolved(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+
+            if (toBeUpdated.equals("description")) {
+                ResourceCreationResponse generatedId = reimbursementService.updateDescription(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+
+            if (toBeUpdated.equals("author_id")) {
+                ResourceCreationResponse generatedId = reimbursementService.updateAuthor_Id(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+            if (toBeUpdated.equals("resolver_id")) {
+                ResourceCreationResponse generatedId = reimbursementService.updateResolver_Id(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+            if (toBeUpdated.equals("status_id")) {
+                ResourceCreationResponse generatedId = reimbursementService.updateStatus_Id(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+
+
+            }
+            if (toBeUpdated.equals("type_id")) {
+                ResourceCreationResponse generatedId = reimbursementService.updateType_Id(requestBody);
+                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
+            }
+        } catch (InvalidRequestException | JsonMappingException e) {
+            resp.setStatus(400);
+            ErrorResponse errorResponse = new ErrorResponse(400, e.getMessage());
+            resp.getWriter().write(jsonMapper.writeValueAsString(errorResponse));
+        } catch (DataSourceException e) {
+            resp.setStatus(500);
+            ErrorResponse errorResponse = new ErrorResponse(500, e.getMessage());
+            resp.getWriter().write(jsonMapper.writeValueAsString(errorResponse));
         }
-        if (toBeUpdated.equals("type_id")) {
-            ResponseString generatedId = reimbursementService.updateType_Id(requestBody);
-            resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-        }
-}
-}
+    }
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+        req.getSession().invalidate();
     }
 }
+
 
