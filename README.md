@@ -1,2 +1,4 @@
 <h1> Reimbursement API</h1>
-<li> USER , ADMIN,  FINANCE MANAGER</li>
+<li> USER </li>
+<li> ADMIN</li>
+<li> FINANCE MANAGER</li>
