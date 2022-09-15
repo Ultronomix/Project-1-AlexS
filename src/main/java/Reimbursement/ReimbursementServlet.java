@@ -40,7 +40,7 @@ public class ReimbursementServlet extends HttpServlet {
         String idToSearchFor = req.getParameter("id");
         ReimbursementResponse requester = (ReimbursementResponse) reimbursementSession.getAttribute("authUser");
 
-        if (!requester.getReimbursement_id().equals("FINANCE MANAGER") && !requester.getReimbursement_id().equals(idToSearchFor)) {
+        if (!requester.getReimbursement_id().equals("1") && !requester.getReimbursement_id().equals(idToSearchFor)) {
             resp.setStatus(403);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403, "Requester is not permitted to communicate with this endpoint")));
             return;

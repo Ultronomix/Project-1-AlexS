@@ -19,6 +19,7 @@ import java.util.List;
 public class UserServlet extends HttpServlet {
     private final UserService userService;
 
+
     public UserServlet(UserService userService) {
         this.userService = userService;
     }
@@ -38,7 +39,7 @@ public class UserServlet extends HttpServlet {
         String idToSearchFor = req.getParameter("id");
 
         UserResponse requester = (UserResponse) userSession.getAttribute("authUser");
-        if (!requester.getRole_id().equals("49ce5a1f-6b51-4e40-8e88-2bf9289292cd") && !requester.getRole_id().equals("b02a2f8a-36f2-4193-bcbd-2058d7628c31")){
+        if (!requester.getRole_id().equals("49ce5a1f-6b51-4e40-8e88-2bf9289292cd") && !requester.getRole_id().equals("b02a2f8a-36f2-4193-bcbd-2058d7628c31") && !requester.getRole_id().equals("97a663ab-0565-49ce-b5a2-51386dae7664")){
             resp.setStatus(403);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403, "Requester is not permitted to communicate with this endpoint")));
             return;
@@ -81,7 +82,6 @@ public class UserServlet extends HttpServlet {
             resp.getWriter().write(jsonMapper.writeValueAsString(responseBody));
 
         } catch (InvalidRequestException | JsonMappingException e) {
-
             resp.setStatus(400);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400, e.getMessage())));
 
@@ -103,13 +103,14 @@ public class UserServlet extends HttpServlet {
         ObjectMapper jsonMapper = new ObjectMapper();
         UserResponse loggedInUser =(UserResponse) userSession.getAttribute("loggedInUser");
 
+
         if (userSession == null){
             resp.setStatus(401);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(401,"please log in")));
         return;
     }
         UserResponse loggedInUser1 = (UserResponse) userSession.getAttribute("loggedInUser");
-        boolean w = loggedInUser1.getRole_id().equals("admin");
+        boolean w = loggedInUser1.getRole_id().equals("b02a2f8a-36f2-4193-bcbd-2058d7628c31");
         if((!w)){
             resp.setStatus(403);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403,"Requester is not permitted to communicate")));

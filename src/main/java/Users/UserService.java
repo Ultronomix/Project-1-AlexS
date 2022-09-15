@@ -71,7 +71,9 @@ public class UserService {
 
         if (newUser.getGivenName() == null || newUser.getGivenName().length() <= 0 ||
                 newUser.getSurname() == null || newUser.getSurname().length() <= 0) {
+
             throw new InvalidRequestException("A non-empty given name and surname must be provided");
+
         }
 
         if (newUser.getEmail() == null || newUser.getEmail().length() <= 0) {
