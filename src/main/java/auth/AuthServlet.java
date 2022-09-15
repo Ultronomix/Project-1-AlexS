@@ -60,6 +60,8 @@ public class AuthServlet extends HttpServlet {
             resp.setStatus(500);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(500, e.getMessage())));
 
+        }catch (RuntimeException e){
+            resp.getWriter().write(jsonMapper.writeValueAsString("User inactive"));
         }
 
     }

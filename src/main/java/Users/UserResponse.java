@@ -10,7 +10,7 @@ public class UserResponse {
     private String password;
     private String given_name;
     private String surname;
-    private String is_active;
+    private  Boolean is_active;
     private String role_id;
 
     public UserResponse(User subject){
@@ -78,11 +78,11 @@ public class UserResponse {
         return this;
     }
 
-    public String getIs_active() {
+    public Boolean getIs_active() {
         return is_active;
     }
 
-    public UserResponse setIs_active(String is_active) {
+    public UserResponse setIs_active( Boolean is_active) {
         this.is_active = is_active;
         return this;
     }

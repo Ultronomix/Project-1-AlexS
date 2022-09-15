@@ -9,13 +9,13 @@ public class User {
     private String password;
     private String given_name;
     private String surname;
-    private String is_active;
+    private boolean is_active;
     private String role_id;
 
     public User(){
         super();
     }
-    public User(String id,String username,String email,String password,String given_name, String surname,String is_active, String role_id){
+    public User(String id,String username,String email,String password,String given_name, String surname,boolean is_active, String role_id){
         this.id = id;
         this.username = username;
         this.email = email;
@@ -78,11 +78,11 @@ public class User {
         this.surname = surname;
     }
 
-    public String getIs_active() {
+    public boolean getIs_active() {
         return is_active;
     }
 
-    public void setIs_active(String is_active) {
+    public void setIs_active(boolean is_active) {
         this.is_active = is_active;
     }
 

@@ -1,8 +1,5 @@
 package Users;
-import Exceptions.DataSourceException;
-import Exceptions.InvalidRequestException;
-import Exceptions.ResourceNotFoundException;
-import Exceptions.ResourcePersistenceException;
+import Exceptions.*;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.ErrorResponse;
@@ -91,6 +88,7 @@ public class UserServlet extends HttpServlet {
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(409, e.getMessage())));
 
         } catch (DataSourceException e) {
+            System.out.println();
 
             resp.setStatus(500);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(500, e.getMessage())));
@@ -99,63 +97,48 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException , IOException{
-        HttpSession userSession = req.getSession(false);
+        resp.getWriter().write("In Progress\n");
+
         ObjectMapper jsonMapper = new ObjectMapper();
-        UserResponse loggedInUser =(UserResponse) userSession.getAttribute("loggedInUser");
+        resp.setContentType("application/json");
 
+        HttpSession userSession = req.getSession(false);
 
-        if (userSession == null){
+        if (userSession == null) {
             resp.setStatus(401);
-            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(401,"please log in")));
-        return;
-    }
-        UserResponse loggedInUser1 = (UserResponse) userSession.getAttribute("loggedInUser");
-        boolean w = loggedInUser1.getRole_id().equals("b02a2f8a-36f2-4193-bcbd-2058d7628c31");
-        if((!w)){
-            resp.setStatus(403);
-            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403,"Requester is not permitted to communicate")));
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(401, "Requester is not authenticated with server, log in.")));
             return;
         }
 
-        resp.setContentType("application/json");
-        String toBeUpdated = req.getParameter("update");
-        try {
-            UpdateRequestBody requestBody = jsonMapper.readValue(req.getInputStream(),UpdateRequestBody.class);
+        UserResponse requester = (UserResponse) userSession.getAttribute("authUser");
 
-            if (toBeUpdated.equals("given_name")){
-                ResourceCreationResponse generatedId = userService.updateGiven_name(requestBody);
-                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-            }
-            if (toBeUpdated.equals("surname")){
-                ResourceCreationResponse generatedId = userService.updateSurname(requestBody);
-                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-            }
-            if (toBeUpdated.equals("email")){
-                ResourceCreationResponse generatedId = userService.updateEmail(requestBody);
-                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-            }
-            if (toBeUpdated.equals("password")){
-                ResourceCreationResponse generatedId = userService.updatePassword(requestBody);
-                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-            }
-            if (toBeUpdated.equals("is_active")){
-                ResourceCreationResponse generatedId = userService.updateIs_Active(requestBody);
-                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-            }
-            if (toBeUpdated.equals("role_id")){
-                ResourceCreationResponse generatedId = userService.updateRole_Id(requestBody);
-                resp.getWriter().write(jsonMapper.writeValueAsString(generatedId));
-            }
-        }catch (InvalidRequestException | JsonMappingException e){
+        if (!requester.getRole_id().equals("49ce5a1f-6b51-4e40-8e88-2bf9289292cd")&& !requester.getRole_id().equals("b02a2f8a-36f2-4193-bcbd-2058d7628c31")){
+            resp.setStatus(403);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403, "Requester not allowed to communicate with this endpoint")));
+            return;
+        }
+
+        String idToSearchFor = req.getParameter("id");
+        UserResponse foundUser = userService.getUserById(idToSearchFor);
+        resp.getWriter().write(jsonMapper.writeValueAsString(foundUser));
+
+
+        try {
+            ResourceCreationResponse responseBody = userService
+                    .updateUser(jsonMapper.readValue(req.getInputStream(), UpdateRequestBody.class), idToSearchFor);
+            resp.getWriter().write(jsonMapper.writeValueAsString(responseBody));
+        } catch (InvalidRequestException | JsonMappingException e) {
             resp.setStatus(400);
-            ErrorResponse errorResponse = new ErrorResponse(400, e.getMessage());
-            resp.getWriter().write(jsonMapper.writeValueAsString(errorResponse));
-        } catch (DataSourceException e){
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400, e.getMessage())));
+        } catch (AuthenticationException e) {
+            resp.setStatus(409);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(409, e.getMessage())));
+        } catch (DataSourceException e) {
             resp.setStatus(500);
-            ErrorResponse errorResponse = new ErrorResponse(500, e.getMessage());
-            resp.getWriter().write(jsonMapper.writeValueAsString(errorResponse));
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(500, e.getMessage())));
         }
-        }
+        resp.getWriter().write("\nEmail is: "+ requester.getEmail()); // TODO change
+    }
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getSession().invalidate();

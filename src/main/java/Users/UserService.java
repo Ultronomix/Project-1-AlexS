@@ -103,96 +103,36 @@ public class UserService {
 
     }
 
-    public ResourceCreationResponse updateGiven_name(UpdateRequestBody updateRequestBody) {
-        if (updateRequestBody == null) {
-            throw new InvalidRequestException("provided request must not be null");
-        }
-        if (updateRequestBody.getUpdateto() == null || updateRequestBody.getUpdateto().length() <= 0 ||
-                updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
-            throw new InvalidRequestException("must provide a first name and an user ID");
-        }
-        if (!userDao.isIdVaild(updateRequestBody.getUserId())) {
-            throw new InvalidRequestException("must provide user ID");
-        }
-        String updateSuccessfulMessage = userDao.updateUserGiven_Name(updateRequestBody.getUpdateto(), updateRequestBody.getUserId());
-        return new ResourceCreationResponse(updateSuccessfulMessage);
-    }
+    public ResourceCreationResponse updateUser(UpdateRequestBody updateUser, String idToSearchFor) {
 
-    public ResourceCreationResponse updateSurname(UpdateRequestBody updateRequestBody) {
-        if (updateRequestBody == null) {
-            throw new InvalidRequestException("provided request must not be null");
+        if (updateUser == null) {
+            throw new InvalidRequestException("Provided request payload was null.");
         }
-        if (updateRequestBody.getUpdateto() == null || updateRequestBody.getUpdateto().length() <= 0 ||
-                updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
-            throw new InvalidRequestException("must provide a surname and an user ID");
+        if (updateUser.getEmail() != null && updateUser.getEmail().trim().length() > 3) {
+            userDao.updateUserEmail(updateUser.getEmail(), idToSearchFor);
+            // throw new InvalidRequestException("Email cannot be empty");
         }
-        if (!userDao.isIdVaild(updateRequestBody.getUserId())) {
-            throw new InvalidRequestException("must provide user ID");
+        if (updateUser.getGiven_name() != null && updateUser.getGiven_name().trim().length() > 4) {
+            // userDAO.updateUserGivenName(updateUser.getGiven_Name(), idToSearchFor);
+            // throw new InvalidRequestException("A empty given name or surname");
         }
-        String updateSuccessfulMessage = userDao.updateUserGiven_Name(updateRequestBody.getUpdateto(), updateRequestBody.getUserId());
-        return new ResourceCreationResponse(updateSuccessfulMessage);
-    }
+        if (updateUser.getSurname() != null && updateUser.getSurname().trim().length() > 4) {
+            // userDAO.updateUserSurname(updateUser.getSurname(), idToSearchFor);
+            // throw new InvalidRequestException("A empty given name or surname");
+        }
+        if (updateUser.getIs_active() == false || updateUser.getIs_active() == true) {
+            // userDao.updateUserIs_Active(updateUser.getIs_active(), idToSearchFor);
+            // throw new InvalidRequestException("A empty given name or surname");
+        }
 
-    public ResourceCreationResponse updateEmail(UpdateRequestBody updateRequestBody) {
-        if (updateRequestBody == null) {
-            throw new InvalidRequestException("provided request must not be null");
-        }
-        if (updateRequestBody.getUpdateto() == null || updateRequestBody.getUpdateto().length() <= 0 ||
-                updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
-            throw new InvalidRequestException("must provide a email and an user ID");
-        }
-        if (!userDao.isIdVaild(updateRequestBody.getUserId())) {
-            throw new InvalidRequestException("must provide user ID");
-        }
-        String updateSuccessfulMessage = userDao.updateUserGiven_Name(updateRequestBody.getUpdateto(), updateRequestBody.getUserId());
-        return new ResourceCreationResponse(updateSuccessfulMessage);
-    }
-
-    public ResourceCreationResponse updatePassword(UpdateRequestBody updateRequestBody) {
-        if (updateRequestBody == null) {
-            throw new InvalidRequestException("provided request must not be null");
-        }
-        if (updateRequestBody.getUpdateto() == null || updateRequestBody.getUpdateto().length() <= 0 ||
-                updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
-            throw new InvalidRequestException("must provide a password and an user ID");
-        }
-        if (!userDao.isIdVaild(updateRequestBody.getUserId())) {
-            throw new InvalidRequestException("must provide user ID");
-        }
-        String updateSuccessfulMessage = userDao.updateUserGiven_Name(updateRequestBody.getUpdateto(), updateRequestBody.getUserId());
-        return new ResourceCreationResponse(updateSuccessfulMessage);
-
-    }
-
-    public ResourceCreationResponse updateIs_Active(UpdateRequestBody updateRequestBody) {
-        if (updateRequestBody == null) {
-            throw new InvalidRequestException("provided request must not be null");
-        }
-        if (updateRequestBody.getUpdateto() == null || updateRequestBody.getUpdateto().length() <= 0 ||
-                updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
-            throw new InvalidRequestException("must provide a is_active and an user ID");
-        }
-        if (!userDao.isIdVaild(updateRequestBody.getUserId())) {
-            throw new InvalidRequestException("must provide user ID");
-        }
-        String updateSuccessfulMessage = userDao.updateUserGiven_Name(updateRequestBody.getUpdateto(), updateRequestBody.getUserId());
-        return new ResourceCreationResponse(updateSuccessfulMessage);
-    }
-
-    public ResourceCreationResponse updateRole_Id(UpdateRequestBody updateRequestBody) {
-        if (updateRequestBody == null) {
-            throw new InvalidRequestException("provided request must not be null");
-        }
-        if (updateRequestBody.getUpdateto() == null || updateRequestBody.getUpdateto().length() <= 0 ||
-                updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
-            throw new InvalidRequestException("must provide a role_ID and an user ID");
-        }
-        if (!userDao.isIdVaild(updateRequestBody.getUserId())) {
-            throw new InvalidRequestException("must provide user ID");
-        }
-        String updateSuccessfulMessage = userDao.updateUserRole_Id(updateRequestBody.getUpdateto(), updateRequestBody.getUserId());
-        return new ResourceCreationResponse(updateSuccessfulMessage);
+        String userToUpdate = updateUser.extractEntity().getEmail();
+        System.out.println(userToUpdate); //! delete
+        String updateEmail = userDao.updateUserEmail(userToUpdate, idToSearchFor);
+        System.out.println("update: " + updateEmail);
+        return new ResourceCreationResponse(updateEmail);
     }
 }
+
+
 
 
