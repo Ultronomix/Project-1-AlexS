@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Reimbursement {
 
     private String reimbursement_id;
-    private String amount;
+    private double amount;
     private String submitted;
     private String resolved;
     private String description;
@@ -15,25 +15,6 @@ public class Reimbursement {
     private String status_id;
     private String type_id;
 
-    public Reimbursement() {
-        super();
-    }
-
-
-    public Reimbursement(String reimbursement_id, String amount, String submitted, String resolved, String description, String payment_id, String author_id, String resolver_id, String status_id, String type_id) {
-        this.reimbursement_id = reimbursement_id;
-        this.amount = amount;
-        this.submitted = submitted;
-        this.resolved = resolved;
-        this.description = description;
-        this.payment_id = payment_id;
-        this.author_id = author_id;
-        this.resolver_id = resolver_id;
-        this.status_id = status_id;
-        this.type_id = type_id;
-
-    }
-
     public String getReimbursement_id() {
         return reimbursement_id;
     }
@@ -42,11 +23,11 @@ public class Reimbursement {
         this.reimbursement_id = reimbursement_id;
     }
 
-    public String getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -119,10 +100,11 @@ public class Reimbursement {
         this.type_id = type_id;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Reimbursement)) return false;
         Reimbursement that = (Reimbursement) o;
         return Objects.equals(reimbursement_id, that.reimbursement_id) && Objects.equals(amount, that.amount) && Objects.equals(submitted, that.submitted) && Objects.equals(resolved, that.resolved) && Objects.equals(description, that.description) && Objects.equals(payment_id, that.payment_id) && Objects.equals(author_id, that.author_id) && Objects.equals(resolver_id, that.resolver_id) && Objects.equals(status_id, that.status_id) && Objects.equals(type_id, that.type_id);
     }

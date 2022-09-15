@@ -14,7 +14,7 @@ public class ReimbursementResponse implements Serializable {
         private String resolver_id;
         private String status_id;
         private String type_id;
-        private String rolename;
+        private String role_id;
         public ReimbursementResponse(Reimbursement subject){
         this.reimbursement_id = reimbursement_id;
         this.amount = amount;
@@ -26,7 +26,7 @@ public class ReimbursementResponse implements Serializable {
         this.resolver_id = resolver_id;
         this.status_id = status_id;
         this.type_id = type_id;
-        this.rolename = rolename;
+        this.role_id = role_id;
 
     }
     public String getReimbursement_id() {
@@ -112,12 +112,12 @@ public class ReimbursementResponse implements Serializable {
         this.type_id = type_id;
 
     }
-    public String getRolename() {
-        return rolename;
+    public String getRole_id() {
+        return role_id;
     }
 
-    public void setRolename(String rolename) {
-        this.rolename = rolename;
+    public void setRole_id(String role_id) {
+        this.role_id = role_id;
 
     }
 
@@ -126,12 +126,12 @@ public class ReimbursementResponse implements Serializable {
         if (this == o) return true;
         if (!(o instanceof ReimbursementResponse)) return false;
         ReimbursementResponse that = (ReimbursementResponse) o;
-        return Objects.equals(reimbursement_id, that.reimbursement_id) && Objects.equals(amount, that.amount) && Objects.equals(submitted, that.submitted) && Objects.equals(resolved, that.resolved) && Objects.equals(description, that.description) && Objects.equals(payment_id, that.payment_id) && Objects.equals(author_id, that.author_id) && Objects.equals(resolver_id, that.resolver_id) && Objects.equals(status_id, that.status_id) && Objects.equals(type_id, that.type_id) && rolename.equals(that.rolename);
+        return Objects.equals(reimbursement_id, that.reimbursement_id) && Objects.equals(amount, that.amount) && Objects.equals(submitted, that.submitted) && Objects.equals(resolved, that.resolved) && Objects.equals(description, that.description) && Objects.equals(payment_id, that.payment_id) && Objects.equals(author_id, that.author_id) && Objects.equals(resolver_id, that.resolver_id) && Objects.equals(status_id, that.status_id) && Objects.equals(type_id, that.type_id) && role_id.equals(that.role_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(reimbursement_id, amount, submitted, resolved, description, payment_id, author_id, resolver_id, status_id, type_id, rolename);
+        return Objects.hash(reimbursement_id, amount, submitted, resolved, description, payment_id, author_id, resolver_id, status_id, type_id, role_id);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class ReimbursementResponse implements Serializable {
                 ", resolver_id='" + resolver_id + '\'' +
                 ", status_id='" + status_id + '\'' +
                 ", type_id='" + type_id + '\'' +
-                ", rolename='" + rolename + '\'' +
+                ", role_id='" + role_id + '\'' +
                 '}';
     }
 }

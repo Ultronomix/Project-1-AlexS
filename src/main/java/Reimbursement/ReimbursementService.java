@@ -4,9 +4,10 @@ import Exceptions.InvalidRequestException;
 import Exceptions.ResourceNotFoundException;
 import common.ResourceCreationResponse;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+
+
 
 public class ReimbursementService {
     private final ReimbursementDao reimbursementDao;
@@ -16,197 +17,102 @@ public class ReimbursementService {
     }
 
     public List<ReimbursementResponse> getAllReimbursement() {
-        return reimbursementDao.GetAllReimbursement()
-                .stream()
-                .map(ReimbursementResponse::new)
-                .collect(Collectors.toList());
+        List<ReimbursementResponse> result = new ArrayList<>();
+        List<Reimbursement> reimbursements = reimbursementDao.getAllReimbursements();
+        for (Reimbursement reimbursement : reimbursements) {
+            result.add(new ReimbursementResponse(reimbursement));
+        }
+        return result;
     }
 
     public ReimbursementResponse getReimbursementById(String id) {
         if (id == null || id.length() <= 0) {
             throw new InvalidRequestException("A non-empty id must be provided !");
         }
-        try {
-            UUID uuid = UUID.fromString(id);
-            return reimbursementDao.findReimbursementById(uuid)
-                    .map(ReimbursementResponse::new)
-                    .orElseThrow(ResourceNotFoundException::new);
-        } catch (IllegalArgumentException e) {
-            throw new InvalidRequestException("An invalid UUID string was provided.");
-        }
+        return reimbursementDao.getReimbursementById(id).map(ReimbursementResponse::new).orElseThrow(ResourceNotFoundException::new);
     }
 
-    public ResourceCreationResponse register(NewReimbursementRequest newReimbursement) {
-        if (newReimbursement == null) {
-            throw new InvalidRequestException("provided request payload was null.");
+    public List<ReimbursementResponse> getReimbursementByStatus(String status) {
+        if (status == null || (!status.toUpperCase().trim().equals("APPROVED")
+                && !status.toUpperCase().trim().equals("PENDING")
+                && !status.toUpperCase().trim().equals("DENIED"))) {
         }
-        if (newReimbursement.getAmount() == null || newReimbursement.getAmount().length() <= 0 ||
-                newReimbursement.getSubmitted() == null || newReimbursement.getSubmitted().length() <= 0) {
-            throw new InvalidRequestException("A empty amount and submission must be provided");
+        List<ReimbursementResponse> result = new ArrayList<>();
+        List<Reimbursement> reimbursements = reimbursementDao.getReimbursementByStatus(status);
+        for (Reimbursement reimbursement : reimbursements) {
+            result.add(new ReimbursementResponse(reimbursement));
         }
-        if (newReimbursement.getResolved() == null || newReimbursement.getResolved().length() <= 0) {
-            throw new InvalidRequestException("failed to resolve");
-        }
-        if (newReimbursement.getDescription() == null || newReimbursement.getDescription().length() < 8) {
-            throw new InvalidRequestException("failed to resolve");
-        }
-        if (newReimbursement.getPayment_id() == null || newReimbursement.getPayment_id().length() < 4) {
-            throw new InvalidRequestException("failed to resolve");
-        }
-        if (newReimbursement.getAuthor_id() == null || newReimbursement.getAuthor_id().length() < 4) {
-            throw new InvalidRequestException("failed to resolve");
-        }
-        if (newReimbursement.getResolver_id() == null || newReimbursement.getResolver_id().length() < 4) {
-            throw new InvalidRequestException("failed to resolve");
-        }
-        if (newReimbursement.getStatus_id() == null || newReimbursement.getStatus_id().length() < 4) {
-            throw new InvalidRequestException("failed to resolve");
-        }
-        if (newReimbursement.getType_id() == null || newReimbursement.getType_id().length() < 4) {
-            throw new InvalidRequestException("failed to resolve");
-        }
-        Reimbursement reimbursementToPersist = newReimbursement.extractEntity();
-        String newReimbursementId = reimbursementDao.save(reimbursementToPersist);
-        return new ResourceCreationResponse(newReimbursementId);
+        return result;
+
+
     }
 
-    public ResourceCreationResponse updateReimbursement_Id(UpdateRequestBodyO updateRequestBodyO) {
-        if (updateRequestBodyO == null) {
+    public List<ReimbursementResponse> getReimbursementByType(String type) {
+        if (type == null || (!type.toUpperCase().trim().equals("LODGING")
+                && !type.toUpperCase().trim().equals("TRAVEL")
+                && !type.toUpperCase().trim().equals("FOOD")
+                && !type.toUpperCase().trim().equals("OTHER"))) {
+            throw new InvalidRequestException("Type must be 'Lodging', 'Travel', " + "'Food', or 'Other'");
+
+        }
+        List<ReimbursementResponse> result = new ArrayList<>();
+        List<Reimbursement> reimbursements = reimbursementDao.getReimbursementByType(type);
+        for (Reimbursement reimbursement : reimbursements) {
+            result.add(new ReimbursementResponse(reimbursement));
+        }
+        return result;
+    }
+
+    public ResourceCreationResponse updateReimbursement(UpdateRequestBodyO updateReimbursement, String reimbursementIdToSearch, String resolver_id) {
+        if (updateReimbursement == null) {
             throw new InvalidRequestException("provided request not null");
         }
-        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
-                updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
-            throw new InvalidRequestException("must provided name and user id");
+        String reimbursementToUpdate = updateReimbursement.extractEntity().getStatus_id().toUpperCase();
+        if (reimbursementToUpdate.equals("APPROVED")) {
+            reimbursementToUpdate = "100001";
+        } else if (reimbursementToUpdate.equals("DENIED")) {
+            reimbursementToUpdate = "10003";
         }
-        if (!reimbursementDao.isIdVaild(updateRequestBodyO.getReimbursementid())) {
-            throw new InvalidRequestException("must provide reim_id");
-        }
-        String updateSuccessulMessage = reimbursementDao.updateReimbursement_Id(updateRequestBodyO.getUpdateto(), updateRequestBodyO.getReimbursementid());
-        return new ResourceCreationResponse(updateSuccessulMessage);
-
+        String update = reimbursementDao.updateRequestStatus(reimbursementToUpdate, reimbursementIdToSearch, resolver_id);
+        return new ResourceCreationResponse(update);
     }
 
-    public ResourceCreationResponse updateAmount(UpdateRequestBodyO updateRequestBodyO) {
-        if (updateRequestBodyO == null) {
-            throw new InvalidRequestException("provided request not null");
+    public ResourceCreationResponse updateUserReimbursement(UpdateRequestBodyO updateReimbursement, String reimbursementId) {
+        if (updateReimbursement == null) {
+            throw new InvalidRequestException("Provide request payload");
         }
-        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
-                updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
-            throw new InvalidRequestException("must provided name and user id");
-        }
-        if (!reimbursementDao.isIdVaild(updateRequestBodyO.getReimbursementid())) {
-            throw new InvalidRequestException("must provide reim_id");
-        }
-        String updateSuccessulMessage = reimbursementDao.updateReimbursement_Id(updateRequestBodyO.getUpdateto(), updateRequestBodyO.getReimbursementid());
-        return new ResourceCreationResponse(updateSuccessulMessage);
+        double newAmount = updateReimbursement.extractEntity().getAmount();
+        String newDescription = updateReimbursement.extractEntity().getDescription();
+        String newType = updateReimbursement.extractEntity().getType_id();
 
-    }
+        System.out.println(newAmount);
 
-    public ResourceCreationResponse updateSubmitted(UpdateRequestBodyO updateRequestBodyO) {
-        if (updateRequestBodyO == null) {
-            throw new InvalidRequestException("provided request not null");
+        if (newAmount > 0) {
+            if (newAmount > 9999.99) {
+                throw new InvalidRequestException("Amount must be below 10k");
+            }
+            reimbursementDao.updateUserDescription(reimbursementId, newDescription);
         }
-        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
-                updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
-            throw new InvalidRequestException("must provided name and user id");
+        if (newType != null) {
+            if (!newType.toUpperCase().equals("LODGING") && !newType.toUpperCase().equals("TRAVEL")
+                    && !newType.toUpperCase().equals("FOOD") && !newType.toUpperCase().equals("Other")) {
+                throw new InvalidRequestException("Type must be 'lodging,'Travel','Food'" + "or 'other'");
+            }
+            if (newType.toUpperCase().equals("LODGNING")) {
+                newType = "20001";
+            }
+            if (newType.toUpperCase().equals("TRAVEL")) {
+                newType = "200002";
+            }
+            if (newType.toUpperCase().equals("FOOD")) {
+                newType = "200003";
+            }
+            if (newType.toUpperCase().equals("OTHER")) {
+                newType = "200004";
+            }
+            reimbursementDao.updateUserType(reimbursementId, newType);
         }
-        if (!reimbursementDao.isIdVaild(updateRequestBodyO.getReimbursementid())) {
-            throw new InvalidRequestException("must provide reim_id");
-        }
-        String updateSuccessulMessage = reimbursementDao.updateReimbursement_Id(updateRequestBodyO.getUpdateto(), updateRequestBodyO.getReimbursementid());
-        return new ResourceCreationResponse(updateSuccessulMessage);
-    }
-
-    public ResourceCreationResponse updateResolved(UpdateRequestBodyO updateRequestBodyO) {
-        if (updateRequestBodyO == null) {
-            throw new InvalidRequestException("provided request not null");
-        }
-        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
-                updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
-            throw new InvalidRequestException("must provided name and user id");
-        }
-        if (!reimbursementDao.isIdVaild(updateRequestBodyO.getReimbursementid())) {
-            throw new InvalidRequestException("must provide reim_id");
-        }
-        String updateSuccessulMessage = reimbursementDao.updateReimbursement_Id(updateRequestBodyO.getUpdateto(), updateRequestBodyO.getReimbursementid());
-        return new ResourceCreationResponse(updateSuccessulMessage);
-    }
-
-    public ResourceCreationResponse updateDescription(UpdateRequestBodyO updateRequestBodyO) {
-        if (updateRequestBodyO == null) {
-            throw new InvalidRequestException("provided request not null");
-        }
-        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
-                updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
-            throw new InvalidRequestException("must provided name and user id");
-        }
-        if (!reimbursementDao.isIdVaild(updateRequestBodyO.getReimbursementid())) {
-            throw new InvalidRequestException("must provide reim_id");
-        }
-        String updateSuccessulMessage = reimbursementDao.updateReimbursement_Id(updateRequestBodyO.getUpdateto(), updateRequestBodyO.getReimbursementid());
-        return new ResourceCreationResponse(updateSuccessulMessage);
-    }
-
-    public ResourceCreationResponse updateAuthor_Id(UpdateRequestBodyO updateRequestBodyO) {
-        if (updateRequestBodyO == null) {
-            throw new InvalidRequestException("provided request not null");
-        }
-        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
-                updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
-            throw new InvalidRequestException("must provided name and user id");
-        }
-        if (!reimbursementDao.isIdVaild(updateRequestBodyO.getReimbursementid())) {
-            throw new InvalidRequestException("must provide reim_id");
-        }
-        String updateSuccessulMessage = reimbursementDao.updateReimbursement_Id(updateRequestBodyO.getUpdateto(), updateRequestBodyO.getReimbursementid());
-        return new ResourceCreationResponse(updateSuccessulMessage);
-    }
-
-    public ResourceCreationResponse updateResolver_Id(UpdateRequestBodyO updateRequestBodyO) {
-        if (updateRequestBodyO == null) {
-            throw new InvalidRequestException("provided request not null");
-        }
-        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
-                updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
-            throw new InvalidRequestException("must provided name and user id");
-        }
-        if (!reimbursementDao.isIdVaild(updateRequestBodyO.getReimbursementid())) {
-            throw new InvalidRequestException("must provide reim_id");
-        }
-        String updateSuccessulMessage = reimbursementDao.updateReimbursement_Id(updateRequestBodyO.getUpdateto(), updateRequestBodyO.getReimbursementid());
-        return new ResourceCreationResponse(updateSuccessulMessage);
-    }
-
-    public ResourceCreationResponse updateStatus_Id(UpdateRequestBodyO updateRequestBodyO) {
-        if (updateRequestBodyO == null) {
-            throw new InvalidRequestException("provided request not null");
-        }
-        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
-                updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
-            throw new InvalidRequestException("must provided name and user id");
-        }
-        if (!reimbursementDao.isIdVaild(updateRequestBodyO.getReimbursementid())) {
-            throw new InvalidRequestException("must provide reim_id");
-        }
-        String updateSuccessulMessage = reimbursementDao.updateReimbursement_Id(updateRequestBodyO.getUpdateto(), updateRequestBodyO.getReimbursementid());
-        return new ResourceCreationResponse(updateSuccessulMessage);
-    }
-
-    public ResourceCreationResponse updateType_Id(UpdateRequestBodyO updateRequestBodyO) {
-        if (updateRequestBodyO == null) {
-            throw new InvalidRequestException("provided request not null");
-        }
-        if (updateRequestBodyO.getUpdateto() == null || updateRequestBodyO.getUpdateto().length() <= 0 ||
-                updateRequestBodyO.getReimbursementid() == null || updateRequestBodyO.getReimbursementid().length() <= 0) {
-            throw new InvalidRequestException("must provided name and user id");
-        }
-        if (!reimbursementDao.isIdVaild(updateRequestBodyO.getReimbursementid())) {
-            throw new InvalidRequestException("must provide reim_id");
-        }
-        String updateSuccessulMessage = reimbursementDao.updateReimbursement_Id(updateRequestBodyO.getUpdateto(), updateRequestBodyO.getReimbursementid());
-        return new ResourceCreationResponse(updateSuccessulMessage);
+        return new ResourceCreationResponse("Updated requests");
     }
 }
-
-
 

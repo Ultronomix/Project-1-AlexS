@@ -5,7 +5,7 @@ import common.Request;
 import java.util.UUID;
 
 public class NewReimbursementRequest implements Request<Reimbursement> {
-    private String amount;
+    private int amount;
     private String submitted;
     private String resolved;
     private String description;
@@ -15,11 +15,11 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
     private String status_id;
     private String type_id;
 
-    public String getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
 
     }

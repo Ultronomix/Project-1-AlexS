@@ -1,48 +1,110 @@
 package Reimbursement;
-import java.util.Objects;
 
 
-public class UpdateRequestBodyO {
-    private String  updateto;
-    private String reimbursementid;
+import common.Request;
+
+public class UpdateRequestBodyO implements Request<Reimbursement> {
+    private String updateto;
+    private String reimbursement_id;
+    private int amount;
+    private String submitted;
+    private String description;
+    private String payment_id;
+    private String author_id;
+    private String type_id;
+
 
     public String getUpdateto() {
         return updateto;
     }
 
-    public void setUpdateto(String  Updateto) {
-        this.updateto =     Updateto;
+    public void setUpdateto(String updateto) {
+        this.updateto = updateto;
+    }
+
+    public String getReimbursement_id() {
+        return reimbursement_id;
+    }
+
+    public void setReimbursement_id(String reimbursement_id) {
+        this.reimbursement_id = reimbursement_id;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public String getSubmitted() {
+        return submitted;
+    }
+
+    public void setSubmitted(String submitted) {
+        this.submitted = submitted;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
 
     }
 
-    public String getReimbursementid() {
-        return reimbursementid;
+    public String getPayment_id() {
+        return payment_id;
     }
 
-    public void setReimbursementid(String reimbursementid) {
-        this.reimbursementid = reimbursementid;
+    public void setPayment_id(String payment_id) {
+        this.payment_id = payment_id;
 
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UpdateRequestBodyO)) return false;
-        UpdateRequestBodyO that = (UpdateRequestBodyO) o;
-        return Objects.equals(updateto, that.updateto) && Objects.equals(reimbursementid, that.reimbursementid);
+    public String getAuthor_id() {
+        return author_id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(updateto, reimbursementid);
+    public void setAuthor_id(String author_id) {
+        this.author_id = author_id;
+
+    }
+
+    public String getType_id() {
+        return type_id;
+    }
+
+    public void setType_id(String type_id) {
+        this.type_id = type_id;
+
     }
 
     @Override
     public String toString() {
-        return "UpdateRequestBody{" +
+        return "UpdateRequestBodyO{" +
                 "updateto='" + updateto + '\'' +
-                ", reimbursementid='" + reimbursementid + '\'' +
+                ", reimbursement_id='" + reimbursement_id + '\'' +
+                ", amount=" + amount +
+                ", submitted='" + submitted + '\'' +
+                ", description='" + description + '\'' +
+                ", payment_id='" + payment_id + '\'' +
+                ", author_id='" + author_id + '\'' +
+                ", type_id='" + type_id + '\'' +
                 '}';
     }
+    @Override
+    public Reimbursement extractEntity(){
+        Reimbursement extractEntity = new Reimbursement();
+        extractEntity.setReimbursement_id(this.reimbursement_id);
+        extractEntity.setAmount(this.amount);
+        extractEntity.setSubmitted(this.submitted);
+        extractEntity.setDescription(this.description);
+        extractEntity.setPayment_id(this.payment_id);
+        extractEntity.setAuthor_id(this.author_id);
+        extractEntity.setType_id(this.type_id);
+        return null;
+    }
 }
-

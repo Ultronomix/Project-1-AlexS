@@ -1,78 +1,62 @@
 package Reimbursement;
-
-import Exceptions.DataSourceException;
-import util.ConnectionUtility;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.time.LocalDate;
+import Exceptions.DataSourceException;
+import Exceptions.ResourceNotFoundException;
+import util.ConnectionUtility;
+import java.sql.*;
+import java.time.LocalDateTime;
 
-public class ReimbursementDao{
 
-    private final String baseSelect = "SELECT au.reimbursement_id,au.amount,au.submitted,au.resolved,au.description,au.payment_id,au.author_id,au.resolver_id,au.status_id " +
-      "FROM ers_reimbursements eu " +
-       "JOIN reimbursements_roles ur "+
-    " ON au.role_id = ur.role_id ";
 
-    public List<Reimbursement> GetAllReimbursement () {
-        List<Reimbursement> allReimbursement = new ArrayList<>();
+public class ReimbursementDao {
+
+    private final String Select = "SELECT au.reimbursement_id,au.amount,au.submitted,au.resolved, " +
+            "au.description,au.payment_id,au.author_id,au.resolver_id,au.status_id" +
+            "ers.status, ert.type" +
+            "FROM ers_reimbursements eu " +
+            "JOIN reimbursements_statuses ers ON au.status_id = ers.status_id " +
+            "JOIN reimbursements_types ert ON au.type ert ON au.type_id = ert.type_id";
+
+    public List<Reimbursement> getAllReimbursements (){
+        List<Reimbursement> allReimbursements = new ArrayList<>();
 
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
-
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(baseSelect);
-
-            allReimbursement = mapResultSet(rs);
-        } catch (SQLException e) {
-            System.err.println("Something went with the database.");
-            e.printStackTrace();
-        }
-        return allReimbursement;
-    }
-
-    public Optional<Reimbursement> findReimbursementById(UUID reimbursement_id) {
-        String sql = baseSelect + "WHERE au.reimbursement_id = ?";
-        try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setObject(1, reimbursement_id);
-            ResultSet rs = pstmt.executeQuery();
-            return mapResultSet(rs).stream().findFirst();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DataSourceException(e);
-        }
-    }
-
-    public Optional<Reimbursement> findReimbursementByAmount(String amount) {
-        String sql = baseSelect + "WHERE au.amount = ?";
-        try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, amount);
-            ResultSet rs = pstmt.executeQuery();
-            return mapResultSet(rs).stream().findFirst();
+            ResultSet rs = stmt.executeQuery(Select);
+            return allReimbursements;
         } catch (SQLException e) {
             throw new DataSourceException(e);
         }
     }
 
-    public boolean isAmountTaken(String amount) {
-        return findReimbursementByAmount(amount).isPresent();
+
+
+    public Optional<Reimbursement> getReimbursementById(String id) {
+        String sqlId = Select + "WHERE au.author_id = ?";
+        try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sqlId);
+            pstmt.setObject(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            return mapResultSet(rs).stream().findFirst();
+        } catch (SQLException e) {
+           // e.printStackTrace();
+            throw new DataSourceException(e);
+        }
     }
 
-    public Optional<Reimbursement> findReimbursementBySubmitted(String submitted) {
-
-        String sql = baseSelect + "WHERE.au.submitted = ?";
-
+    public Optional<Reimbursement> getReimbursementByReimbursementId (String reimbursementId) {
+        String sqlId = Select + "WHERE au.reimbursement_id = ?";
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, submitted);
+            PreparedStatement pstmt = conn.prepareStatement(sqlId);
+            pstmt.setString(1, reimbursementId);
             ResultSet rs = pstmt.executeQuery();
             return mapResultSet(rs).stream().findFirst();
         } catch (SQLException e) {
@@ -80,117 +64,126 @@ public class ReimbursementDao{
         }
     }
 
-    public boolean isSubmittedTaken(String submitted) {
-        return findReimbursementBySubmitted(submitted).isPresent();
-    }
-
-    public Optional<Reimbursement> findReimbursementByResolvedAndDescription(String resolved, String description) {
-        String sql = baseSelect + "WHERE au.resolved = ? AND au.description = ?";
+    public List<Reimbursement> getReimbursementByStatus (String status) {
+        String sqlStatus = Select + "WHERE au.status = ?";
+        List<Reimbursement> reimbursementStatus = new ArrayList<>();
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, resolved);
-            pstmt.setString(2, description);
+            PreparedStatement pstmt = conn.prepareStatement(sqlStatus);
+            pstmt.setString(1, status.toUpperCase());
             ResultSet rs = pstmt.executeQuery();
-            return mapResultSet(rs).stream().findFirst();
+            return reimbursementStatus;
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DataSourceException(e);
         }
-
     }
 
-    public Optional<Reimbursement> findReimbursementByAuthor_idAndResolver_id(String author_id, String resolver_id) {
-
-        String sql = baseSelect + "WHERE au.author_id = ? AND au.resolver_id = ?";
+    public List<Reimbursement> getReimbursementByType (String type) {
+        String sqlType = Select + "WHERE ert.type";
+        List<Reimbursement> reimbursementType = new ArrayList<>();
 
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
-
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, author_id);
-            pstmt.setString(2, resolver_id);
+            PreparedStatement pstmt = conn.prepareStatement(sqlType);
+            pstmt.setString(1, type.toUpperCase());
             ResultSet rs = pstmt.executeQuery();
-            return mapResultSet(rs).stream().findFirst();
-
+            return reimbursementType;
         } catch (SQLException e) {
-            // TODO log this exception
             throw new DataSourceException(e);
         }
     }
-
-    public Optional<Reimbursement> findReimbursementByStatus_idAndType_id(String status_id, String type_id) {
-
-        String sql = baseSelect + "WHERE au.status_id = ? AND au.type_id = ?";
+    public String updateRequestStatus (String status ,String reimbursement_id,String resolver_id) {
+        String updateSql = "UPDATE ers_reimbursements SET status_id = ?, resolved = ?, resolver_id = ? WHERE reimb_id = ?";
 
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
 
-
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, status_id);
-            pstmt.setString(2, type_id);
-            ResultSet rs = pstmt.executeQuery();
-            return mapResultSet(rs).stream().findFirst();
-
-        } catch (SQLException e) {
-            // TODO log this exception
-            throw new DataSourceException(e);
-
-
-        }
-    }
-    public String updateReimbursement_Id(String to,String id){
-        String sql ="update\"reimbursement\"set reimbursement_id =? where id=?;";
-        try (Connection conn = ConnectionUtility.getInstance().getConnection()){
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setBoolean(1,Boolean.parseBoolean(to));
-            pstmt.setInt(2,Integer.parseInt(id));
-            int rs= pstmt.executeUpdate();
-            return "Reim active status updaed to " + to + "Rows affected =" +rs;
-        }catch (SQLException e){
-            throw new DataSourceException(e);
-        }
-
-
-    }
-
-    public String save(Reimbursement reimbursement) {
-
-        String sql = "INSERT INTO app_users (reimbursement_id,amount,submitted,resolved,description,payment_id,author_id,resolver_id,status_id,type_id) " +
-         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? '49ce5a1f-6b51-4e40-8e88-2bf9289292cd')";
-        try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
-            PreparedStatement pstmt = conn.prepareStatement(sql, new String[]{"id"});
-            pstmt.setString(1, reimbursement.getReimbursement_id());
-            pstmt.setString(2, reimbursement.getAmount());
-            pstmt.setString(3, reimbursement.getSubmitted());
-            pstmt.setString(4, reimbursement.getResolved());
-            pstmt.setString(5, reimbursement.getDescription());
-            pstmt.setString(6, reimbursement.getPayment_id());
-            pstmt.setString(7, reimbursement.getAuthor_id());
-            pstmt.setString(8, reimbursement.getResolver_id());
-            pstmt.setString(9, reimbursement.getStatus_id());
-            pstmt.setString(10, reimbursement.getType_id());
-
+            PreparedStatement pstmt = conn.prepareStatement(updateSql);
+            pstmt.setString(1, status);
+            pstmt.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            pstmt.setString(3, resolver_id);
+            pstmt.setString(4, reimbursement_id);
             pstmt.executeUpdate();
-            ResultSet rs = pstmt.getGeneratedKeys();
-            rs.next();
-            reimbursement.setReimbursement_id(rs.getString("reimbursement_id"));
-
+            return "Updated status";
         } catch (SQLException e) {
-            log("ERROR", e.getMessage());
+            throw new DataSourceException(e);
         }
-
-        log("INFO", "Successfully persisted new used with id: " + reimbursement.getReimbursement_id());
-
-        return reimbursement.getReimbursement_id();
     }
+        public String updateUserAmount(String reimbursement_id, double newAmount) {
+
+            // TODO add log
+            String updateAmountSql = "UPDATE ers_reimbursements SET amount = ? WHERE reimbursement_id = ?";
+
+            try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
+
+                PreparedStatement pstmt = conn.prepareStatement(updateAmountSql);
+                pstmt.setDouble(1, newAmount);
+                pstmt.setString(2, reimbursement_id);
+
+                pstmt.executeUpdate();
+
+                return "Amount ";
+            } catch (SQLException e) {
+                // TODO add log
+                throw new DataSourceException(e);
 
 
+            }
+        }
+    public String updateUserDescription (String reimbursementId, String description) {
 
+        String updateAmountSql = "UPDATE ers_reimbursements SET description = ? WHERE reimbursement_id = ?";
+
+        try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(updateAmountSql);
+            pstmt.setString(1, description);
+            pstmt.setString(2, reimbursementId);
+            System.out.println(pstmt);
+            pstmt.executeUpdate();
+
+            return "Description ";
+        } catch (SQLException e) {
+            // TODO add log
+            throw new DataSourceException(e);
+        }
+    }
+    public String updateUserType (String reimbursementId, String type_id) {
+
+        // TODO add log
+        String updateAmountSql = "UPDATE ers_reimbursements SET type_id = ? WHERE reimbursement_id = ?";
+
+        try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(updateAmountSql);
+            pstmt.setString(1, type_id);
+            pstmt.setString(2, reimbursementId);
+            System.out.println(pstmt);
+            pstmt.executeUpdate();
+
+            return "Type ";
+        } catch (SQLException e) {
+
+            throw new DataSourceException(e);
+        }
+    }
+    public boolean isPending (String reimbursementId){
+        try {
+            Optional<Reimbursement> reimbursement = getReimbursementByReimbursementId(reimbursementId);
+
+            if (reimbursement.get().getStatus_id().equals("PENDING")) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (NoSuchElementException e) {
+            throw new ResourceNotFoundException();
+
+        }
+    }
     private List<Reimbursement> mapResultSet(ResultSet rs) throws SQLException {
         List<Reimbursement> reimbursements = new ArrayList<>();
         while (rs.next()) {
             Reimbursement reimbursement = new Reimbursement();
             reimbursement.setReimbursement_id(rs.getString("reimbursement_id"));
-            reimbursement.setAmount(rs.getString("amount"));
+            reimbursement.setAmount(rs.getDouble("amount"));
             reimbursement.setSubmitted(rs.getString("submitted"));
             reimbursement.setResolved(rs.getString("resolved"));
             reimbursement.setDescription(rs.getString("description"));
@@ -202,20 +195,7 @@ public class ReimbursementDao{
         }
         return reimbursements;
     }
-    public void log(String level, String message) {
-        try {
-            File logFile = new File("logs/app.log");
-            logFile.createNewFile();
-                BufferedWriter logWriter = new BufferedWriter(new FileWriter(logFile));
-            logWriter.write(String.format("[%s] at %s logged: [%s] %s\n", Thread.currentThread().getName(), LocalDate.now(), level.toUpperCase(), message));
-            logWriter.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
 }
-public boolean isIdVaild(String id){
-        return findReimbursementById(UUID.fromString(id)).isPresent();
-}
-}
+
 
