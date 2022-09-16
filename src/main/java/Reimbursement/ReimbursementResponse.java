@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class ReimbursementResponse implements Serializable {
         private String reimbursement_id;
-        private String amount;
+        private double amount;
         private String submitted;
         private String resolved;
         private String description;
@@ -16,9 +16,8 @@ public class ReimbursementResponse implements Serializable {
         private String type_id;
      //   private String role_id;
         public ReimbursementResponse(Reimbursement subject){
-            //System.out.println("actual reimb: " + subject);
         this.reimbursement_id = subject.getReimbursement_id();
-        //this.amount = subject.getAmount();
+        this.amount = subject.getAmount();
         this.submitted = subject.getSubmitted();
         this.resolved =subject.getResolved();
         this.description = subject.getDescription();
@@ -38,11 +37,11 @@ public class ReimbursementResponse implements Serializable {
         this.reimbursement_id = reimbursement_id;
     }
 
-    public String getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
