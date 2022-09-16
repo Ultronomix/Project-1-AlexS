@@ -98,7 +98,7 @@ public class ReimbursementService {
                     && !newType.toUpperCase().equals("FOOD") && !newType.toUpperCase().equals("Other")) {
                 throw new InvalidRequestException("Type must be 'lodging,'Travel','Food'" + "or 'other'");
             }
-            if (newType.toUpperCase().equals("LODGNING")) {
+            if (newType.toUpperCase().equals("LODGING")) {
                 newType = "20001";
             }
             if (newType.toUpperCase().equals("TRAVEL")) {

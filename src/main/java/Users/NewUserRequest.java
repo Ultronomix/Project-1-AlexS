@@ -13,6 +13,7 @@ public class NewUserRequest implements Request <User>{
     public String username;
     public String password;
 
+
     public String getGivenName() {
         return givenName;
     }

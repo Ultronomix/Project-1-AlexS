@@ -5,6 +5,7 @@ import common.Request;
 import java.util.UUID;
 
 public class NewReimbursementRequest implements Request<Reimbursement> {
+    private String reimbursement_id;
     private int amount;
     private String submitted;
     private String resolved;
@@ -14,6 +15,17 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
     private String resolver_id;
     private String status_id;
     private String type_id;
+    //private String role_id;
+
+
+
+    public String getReimbursement_id() {
+        return reimbursement_id;
+    }
+
+    public void setReimbursement_id(String reimbursement_id) {
+        this.reimbursement_id = reimbursement_id;
+    }
 
     public int getAmount() {
         return amount;
@@ -95,10 +107,19 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
         this.type_id = type_id;
 
     }
+   // public String getRole_id(){
+     //   return role_id;
+
+   // }
+
+   // public void setRole_id(String role_id){
+   //     this.role_id = role_id;
+   // }
 
     @Override
     public String toString() {
         return "NewReimbursementRequest{" +
+                "reimbursement_id='" + reimbursement_id+ '\'' +
                 "amount='" + amount + '\'' +
                 ", submitted='" + submitted + '\'' +
                 ", resolved='" + resolved + '\'' +
@@ -108,6 +129,8 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
                 ", resolver_id='" + resolver_id + '\'' +
                 ", status_id='" + status_id + '\'' +
                 ", type_id='" + type_id + '\'' +
+             //   ", role_id='" + role_id + '\'' +
+
                 '}';
     }
     @Override
@@ -121,7 +144,9 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
         extractEntity.setPayment_id(this.payment_id);
         extractEntity.setAuthor_id(this.author_id);
         extractEntity.setResolver_id(this.resolver_id);
+        extractEntity.setStatus_id(this.status_id);
         extractEntity.setType_id(this.type_id);
+       // extractEntity.setRole_id(this.role_id);
         return extractEntity;
     }
 }

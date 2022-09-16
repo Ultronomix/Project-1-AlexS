@@ -38,7 +38,7 @@ public class AuthServiceTest {
 
         //* Arrange
        // Credentials credentialsStub = new Credentials("valid", "credentials");
-        //User userStub = new User("some-id", "valid", "valid123@gmail.com", "credentials", "Valid", "test", true);
+      //  User userStub = new User("some-id", "valid", "valid123@gmail.com", "credentials", "Valid", "test", true);
        // when(mockUserDao.findUserByUsernameAndPassword(anyString(), anyString())).thenReturn(Optional.of(userStub));
        // when(mockUserDao.isActive(anyString(), anyString())).thenReturn(true);
       //  UserResponse expectedResult = new UserResponse(userStub);

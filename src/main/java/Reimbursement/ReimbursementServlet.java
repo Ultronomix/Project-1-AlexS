@@ -36,7 +36,7 @@ public class ReimbursementServlet extends HttpServlet {
             return;
         }
 
-        ReimbursementResponse requester = (ReimbursementResponse) reimbursementSession.getAttribute("authUser");
+        UserResponse requester = (UserResponse) reimbursementSession.getAttribute("authUser");
 
         String idToSearchFor = req.getParameter("id");
         String statusToSearchFor = req.getParameter("status");
@@ -73,6 +73,7 @@ public class ReimbursementServlet extends HttpServlet {
             resp.setStatus(404);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(404, e.getMessage())));
         } catch (DataSourceException e) {
+            e.printStackTrace();
             resp.setStatus(500);
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(500, e.getMessage())));
         }
@@ -89,7 +90,9 @@ public class ReimbursementServlet extends HttpServlet {
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(401, "Requester not authenticated with server,log in")));
             return;
         }
-        resp.getWriter().write("Post to /reimbursement work");
+
+        resp.getWriter().write("Post to reimbursement work");
+
     }
 
     @Override

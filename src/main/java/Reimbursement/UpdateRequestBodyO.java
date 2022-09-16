@@ -13,6 +13,15 @@ public class UpdateRequestBodyO implements Request<Reimbursement> {
     private String author_id;
     private String type_id;
 
+   // private String role_id;
+
+
+  //  public String getRole_id(){
+   //     return role_id;
+  //  }
+ //   public void setRole_id(String role_id){
+  //      this.role_id = role_id;
+  //  }
 
     public String getUpdateto() {
         return updateto;
@@ -93,6 +102,7 @@ public class UpdateRequestBodyO implements Request<Reimbursement> {
                 ", payment_id='" + payment_id + '\'' +
                 ", author_id='" + author_id + '\'' +
                 ", type_id='" + type_id + '\'' +
+             //   ", role_id'" + role_id + '\'' +
                 '}';
     }
     @Override
@@ -105,6 +115,7 @@ public class UpdateRequestBodyO implements Request<Reimbursement> {
         extractEntity.setPayment_id(this.payment_id);
         extractEntity.setAuthor_id(this.author_id);
         extractEntity.setType_id(this.type_id);
+       // extractEntity.setRole_id(this.role_id);
         return null;
     }
 }

@@ -18,12 +18,11 @@ import java.time.LocalDateTime;
 
 public class ReimbursementDao {
 
-    private final String Select = "SELECT au.reimbursement_id,au.amount,au.submitted,au.resolved, " +
-            "au.description,au.payment_id,au.author_id,au.resolver_id,au.status_id" +
-            "ers.status, ert.type" +
-            "FROM ers_reimbursements eu " +
-            "JOIN reimbursements_statuses ers ON au.status_id = ers.status_id " +
-            "JOIN reimbursements_types ert ON au.type ert ON au.type_id = ert.type_id";
+    private final String Select = "SELECT er.reimbursement_id, er.amount, er.submitted, er.resolved, "+
+            "er.description, er.payment_id, er.author_id, er.resolver_id, ers.status_id ,ert.type_id " +
+            "FROM ers_reimbursements er "+
+            "JOIN ers_reimbursement_statuses ers ON er.status_id = ers.status_id "+
+            "JOIN ers_reimbursement_types ert ON er.type_id = ert.type_id ";
 
     public List<Reimbursement> getAllReimbursements (){
         List<Reimbursement> allReimbursements = new ArrayList<>();
@@ -31,6 +30,7 @@ public class ReimbursementDao {
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(Select);
+            allReimbursements = mapResultSet(rs);
             return allReimbursements;
         } catch (SQLException e) {
             throw new DataSourceException(e);
@@ -40,7 +40,7 @@ public class ReimbursementDao {
 
 
     public Optional<Reimbursement> getReimbursementById(String id) {
-        String sqlId = Select + "WHERE au.author_id = ?";
+        String sqlId = Select + "WHERE er.reimbursement_id = ?";
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(sqlId);
             pstmt.setObject(1, id);
@@ -53,7 +53,7 @@ public class ReimbursementDao {
     }
 
     public Optional<Reimbursement> getReimbursementByReimbursementId (String reimbursementId) {
-        String sqlId = Select + "WHERE au.reimbursement_id = ?";
+        String sqlId = Select + "WHERE er.reimbursement_id = ?";
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(sqlId);
             pstmt.setString(1, reimbursementId);
@@ -65,33 +65,36 @@ public class ReimbursementDao {
     }
 
     public List<Reimbursement> getReimbursementByStatus (String status) {
-        String sqlStatus = Select + "WHERE au.status = ?";
+        String sqlStatus = Select + "WHERE ers.status_id = ?";
         List<Reimbursement> reimbursementStatus = new ArrayList<>();
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(sqlStatus);
             pstmt.setString(1, status.toUpperCase());
             ResultSet rs = pstmt.executeQuery();
+            reimbursementStatus = mapResultSet(rs);
             return reimbursementStatus;
         } catch (SQLException e) {
             throw new DataSourceException(e);
+
         }
     }
 
     public List<Reimbursement> getReimbursementByType (String type) {
-        String sqlType = Select + "WHERE ert.type";
+        String sqlType = Select + "WHERE ert.type_id";
         List<Reimbursement> reimbursementType = new ArrayList<>();
 
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(sqlType);
             pstmt.setString(1, type.toUpperCase());
             ResultSet rs = pstmt.executeQuery();
+            reimbursementType =mapResultSet(rs);
             return reimbursementType;
         } catch (SQLException e) {
             throw new DataSourceException(e);
         }
     }
     public String updateRequestStatus (String status ,String reimbursement_id,String resolver_id) {
-        String updateSql = "UPDATE ers_reimbursements SET status_id = ?, resolved = ?, resolver_id = ? WHERE reimb_id = ?";
+        String updateSql = "UPDATE ers_reimbursements SET status_id = ?, resolved = ?, resolver_id = ? WHERE reimbursement_id = ?";
 
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
 
@@ -108,7 +111,6 @@ public class ReimbursementDao {
     }
         public String updateUserAmount(String reimbursement_id, double newAmount) {
 
-            // TODO add log
             String updateAmountSql = "UPDATE ers_reimbursements SET amount = ? WHERE reimbursement_id = ?";
 
             try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
@@ -141,13 +143,13 @@ public class ReimbursementDao {
 
             return "Description ";
         } catch (SQLException e) {
-            // TODO add log
+
             throw new DataSourceException(e);
         }
     }
     public String updateUserType (String reimbursementId, String type_id) {
 
-        // TODO add log
+
         String updateAmountSql = "UPDATE ers_reimbursements SET type_id = ? WHERE reimbursement_id = ?";
 
         try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
@@ -192,6 +194,9 @@ public class ReimbursementDao {
             reimbursement.setResolver_id(rs.getString("resolver_id"));
             reimbursement.setStatus_id(rs.getString("status_id"));
             reimbursement.setType_id(rs.getString("type_id"));
+          //  reimbursement.setRole_id(rs.getString("role_id"));
+
+            reimbursements.add(reimbursement);
         }
         return reimbursements;
     }
