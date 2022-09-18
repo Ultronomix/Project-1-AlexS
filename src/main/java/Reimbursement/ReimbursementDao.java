@@ -186,8 +186,8 @@ public class ReimbursementDao {
             Reimbursement reimbursement = new Reimbursement();
             reimbursement.setReimbursement_id(rs.getString("reimbursement_id"));
             reimbursement.setAmount(rs.getDouble("amount"));
-            reimbursement.setSubmitted(rs.getString("submitted"));
-            reimbursement.setResolved(rs.getString("resolved"));
+         //   reimbursement.setSubmitted(rs.getString("submitted"));
+          //  reimbursement.setResolved(rs.getString("resolved"));
             reimbursement.setDescription(rs.getString("description"));
             reimbursement.setPayment_id(rs.getString("payment_id"));
             reimbursement.setAuthor_id(rs.getString("author_id"));
@@ -199,6 +199,34 @@ public class ReimbursementDao {
             reimbursements.add(reimbursement);
         }
         return reimbursements;
+    }
+
+    public String save(Reimbursement newReimbursement) {
+        String select = "INSERT INTO ers_reimbursements (reimbursement_id, amount, description, payment_id, author_id, resolver_id, status_id, type_id) " +
+                "VALUES(?,?,?,?,?,?,?,?)"; //submitted, resolved
+
+        try (Connection conn = ConnectionUtility.getInstance().getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(select, new String[]{"reimbursement_id"});
+            pstmt.setString(1, newReimbursement.getReimbursement_id());
+            pstmt.setDouble(2, newReimbursement.getAmount());
+           // pstmt.setString(3, newReimbursement.getSubmitted());
+            // pstmt.setString(4, newReimbursement.getResolved());
+            pstmt.setString(3, newReimbursement.getDescription());
+            pstmt.setString(4, newReimbursement.getPayment_id());
+            pstmt.setString(5, newReimbursement.getAuthor_id());
+            pstmt.setString(6, newReimbursement.getResolver_id());
+            pstmt.setString(7, newReimbursement.getStatus_id());
+           pstmt.setString(8, newReimbursement.getType_id());
+
+            pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            rs.next();
+            newReimbursement.setReimbursement_id(rs.getString("reimbursement_id"));
+        } catch (SQLException e){
+            e.printStackTrace();
+    }
+        return newReimbursement.getReimbursement_id();
+
     }
 
 }

@@ -7,7 +7,7 @@ public class UpdateRequestBodyO implements Request<Reimbursement> {
     private String updateto;
     private String reimbursement_id;
     private int amount;
-    private String submitted;
+   // private String submitted;
     private String description;
     private String payment_id;
     private String author_id;
@@ -47,13 +47,13 @@ public class UpdateRequestBodyO implements Request<Reimbursement> {
         this.amount = amount;
     }
 
-    public String getSubmitted() {
-        return submitted;
-    }
+   // public String getSubmitted() {
+     //   return submitted;
+    //}
 
-    public void setSubmitted(String submitted) {
-        this.submitted = submitted;
-    }
+   // public void setSubmitted(String submitted) {
+     //   this.submitted = submitted;
+    //}
 
     public String getDescription() {
         return description;
@@ -97,7 +97,7 @@ public class UpdateRequestBodyO implements Request<Reimbursement> {
                 "updateto='" + updateto + '\'' +
                 ", reimbursement_id='" + reimbursement_id + '\'' +
                 ", amount=" + amount +
-                ", submitted='" + submitted + '\'' +
+             //   ", submitted='" + submitted + '\'' +
                 ", description='" + description + '\'' +
                 ", payment_id='" + payment_id + '\'' +
                 ", author_id='" + author_id + '\'' +
@@ -110,12 +110,12 @@ public class UpdateRequestBodyO implements Request<Reimbursement> {
         Reimbursement extractEntity = new Reimbursement();
         extractEntity.setReimbursement_id(this.reimbursement_id);
         extractEntity.setAmount(this.amount);
-        extractEntity.setSubmitted(this.submitted);
+       // extractEntity.setSubmitted(this.submitted);
         extractEntity.setDescription(this.description);
         extractEntity.setPayment_id(this.payment_id);
         extractEntity.setAuthor_id(this.author_id);
         extractEntity.setType_id(this.type_id);
-       // extractEntity.setRole_id(this.role_id);
+        //extractEntity.setRole_id(this.role_id);
         return null;
     }
 }

@@ -114,5 +114,42 @@ public class ReimbursementService {
         }
         return new ResourceCreationResponse("Updated requests");
     }
+
+    public ResourceCreationResponse create(NewReimbursementRequest newReimbursement) {
+        if (newReimbursement == null) {
+            throw new InvalidRequestException("Provided request payload was null");
+        }
+        if (newReimbursement.getReimbursement_id() == null) {
+            throw new InvalidRequestException("Provided request payload was null");
+        }
+        if (newReimbursement.getAmount() == 0) {
+            throw new InvalidRequestException("Provided request payload was null");
+        }
+      //  if (newReimbursement.getResolved() == null) {
+           // throw new InvalidRequestException("Provided request payload was null");
+       // }
+        if (newReimbursement.getDescription() == null) {
+            throw new InvalidRequestException("Provided request payload was null");
+
+        }
+        if (newReimbursement.getPayment_id() == null) {
+            throw new InvalidRequestException("Provided request payload was null");
+        }
+        if (newReimbursement.getAuthor_id() == null) {
+            throw new InvalidRequestException("Provided request payload was null");
+        }
+        if (newReimbursement.getResolver_id() == null) {
+            throw new InvalidRequestException("Provided request payload was null");
+        }
+        if (newReimbursement.getStatus_id() == null) {
+            throw new InvalidRequestException("Provided request payload was null");
+        }
+        if (newReimbursement.getType_id() == null) {
+            throw new InvalidRequestException("Provided request payload was null");
+       }
+        Reimbursement reimbursementToPersist = newReimbursement.extractEntity();
+        String newReimbursementsId = reimbursementDao.save(reimbursementToPersist);
+        return new ResourceCreationResponse(newReimbursementsId);
+    }
 }
 

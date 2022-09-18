@@ -7,14 +7,15 @@ import java.util.UUID;
 public class NewReimbursementRequest implements Request<Reimbursement> {
     private String reimbursement_id;
     private int amount;
-    private String submitted;
-    private String resolved;
+   // private String submitted;
+    //private String resolved;
     private String description;
     private String payment_id;
     private String author_id;
     private String resolver_id;
     private String status_id;
     private String type_id;
+
     //private String role_id;
 
 
@@ -31,28 +32,28 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
         return amount;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+   public void setAmount(int amount) {
+
 
     }
 
-    public String getSubmitted() {
-        return submitted;
-    }
+    //public String getSubmitted() {
+      //  return submitted;
+   // }
 
-    public void setSubmitted(String submitted) {
-        this.submitted = submitted;
+   // public void setSubmitted(String submitted) {
+   //     this.submitted = submitted;
 
-    }
+  //  }
 
-    public String getResolved() {
-        return resolved;
-    }
+  //  public String getResolved() {
+    //    return resolved;
+ //   }
 
-    public void setResolved(String resolved) {
-        this.resolved = resolved;
+ //   public void setResolved(String resolved) {
+ //       this.resolved = resolved;
 
-    }
+  //  }
 
     public String getDescription() {
         return description;
@@ -99,7 +100,7 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
 
     }
 
-    public String getType_id() {
+  public String getType_id() {
         return type_id;
     }
 
@@ -107,30 +108,21 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
         this.type_id = type_id;
 
     }
-   // public String getRole_id(){
-     //   return role_id;
 
-   // }
-
-   // public void setRole_id(String role_id){
-   //     this.role_id = role_id;
-   // }
 
     @Override
     public String toString() {
         return "NewReimbursementRequest{" +
                 "reimbursement_id='" + reimbursement_id+ '\'' +
                 "amount='" + amount + '\'' +
-                ", submitted='" + submitted + '\'' +
-                ", resolved='" + resolved + '\'' +
+              //  ", submitted='" + submitted + '\'' +
+               // ", resolved='" + resolved + '\'' +
                 ", description='" + description + '\'' +
                 ", payment_id='" + payment_id + '\'' +
                 ", author_id='" + author_id + '\'' +
                 ", resolver_id='" + resolver_id + '\'' +
                 ", status_id='" + status_id + '\'' +
-                ", type_id='" + type_id + '\'' +
-             //   ", role_id='" + role_id + '\'' +
-
+               ", type_id='" + type_id + '\'' +
                 '}';
     }
     @Override
@@ -138,15 +130,14 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
         Reimbursement extractEntity = new Reimbursement();
         extractEntity.setReimbursement_id(UUID.randomUUID().toString());
         extractEntity.setAmount(this.amount);
-        extractEntity.setSubmitted(this.submitted);
-        extractEntity.setResolved(this.resolved);
+        //extractEntity.setSubmitted(this.submitted);
+        //extractEntity.setResolved(this.resolved);
         extractEntity.setDescription(this.description);
         extractEntity.setPayment_id(this.payment_id);
         extractEntity.setAuthor_id(this.author_id);
         extractEntity.setResolver_id(this.resolver_id);
         extractEntity.setStatus_id(this.status_id);
         extractEntity.setType_id(this.type_id);
-       // extractEntity.setRole_id(this.role_id);
         return extractEntity;
     }
 }

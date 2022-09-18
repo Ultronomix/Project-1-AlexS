@@ -6,8 +6,8 @@ public class Reimbursement {
 
     private String reimbursement_id;
     private double amount;
-    private String submitted;
-    private String resolved;
+   // private String submitted;
+    //private String resolved;
     private String description;
     private String payment_id;
     private String author_id;
@@ -33,23 +33,23 @@ public class Reimbursement {
         this.amount = amount;
     }
 
-    public String getSubmitted() {
-        return submitted;
-    }
+    //public String getSubmitted() {
+  //      return submitted;
+ //   }
 
-    public void setSubmitted(String submitted) {
-        this.submitted = submitted;
+  //  public void setSubmitted(String submitted) {
+  //      this.submitted = submitted;
 
-    }
+ //   }
 
-    public String getResolved() {
-        return resolved;
-    }
+   // public String getResolved() {
+     //   return resolved;
+   // }
 
-    public void setResolved(String resolved) {
-        this.resolved = resolved;
+  //  public void setResolved(String resolved) {
+    //    this.resolved = resolved;
 
-    }
+   // }
 
     public String getDescription() {
         return description;
@@ -115,12 +115,12 @@ public class Reimbursement {
         if (this == o) return true;
         if (!(o instanceof Reimbursement)) return false;
         Reimbursement that = (Reimbursement) o;
-        return Double.compare(that.amount, amount) == 0 && Objects.equals(reimbursement_id, that.reimbursement_id) && Objects.equals(submitted, that.submitted) && Objects.equals(resolved, that.resolved) && Objects.equals(description, that.description) && Objects.equals(payment_id, that.payment_id) && Objects.equals(author_id, that.author_id) && Objects.equals(resolver_id, that.resolver_id) && Objects.equals(status_id, that.status_id) && Objects.equals(type_id, that.type_id);//&& Objects.equals(role_id, that.role_id);
+        return Double.compare(that.amount, amount) == 0 && Objects.equals(reimbursement_id, that.reimbursement_id) &&  Objects.equals(description, that.description) && Objects.equals(payment_id, that.payment_id) && Objects.equals(author_id, that.author_id) && Objects.equals(resolver_id, that.resolver_id) && Objects.equals(status_id, that.status_id) && Objects.equals(type_id, that.type_id);//Objects.equals(submitted, that.submitted) && Objects.equals(resolved, that.resolved) &&
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(reimbursement_id, amount, submitted, resolved, description, payment_id, author_id, resolver_id, status_id, type_id);//, role_id);
+        return Objects.hash(reimbursement_id, amount, description, payment_id, author_id, resolver_id, status_id, type_id);//submitted, resolved
     }
 
     @Override
@@ -128,8 +128,8 @@ public class Reimbursement {
         return "Reimbursement{" +
                 "reimbursement_id='" + reimbursement_id + '\'' +
                 ", amount=" + amount +
-                ", submitted='" + submitted + '\'' +
-                ", resolved='" + resolved + '\'' +
+              //  ", submitted='" + submitted + '\'' +
+                //", resolved='" + resolved + '\'' +
                 ", description='" + description + '\'' +
                 ", payment_id='" + payment_id + '\'' +
                 ", author_id='" + author_id + '\'' +

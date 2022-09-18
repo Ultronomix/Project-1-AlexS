@@ -90,8 +90,30 @@ public class ReimbursementServlet extends HttpServlet {
             resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(401, "Requester not authenticated with server,log in")));
             return;
         }
+        UserResponse requester =(UserResponse) reimbursementSession.getAttribute("authUser");
+        if (!requester.getRole_id().equals("49ce5a1f-6b51-4e40-8e88-2bf9289292cd")){
+            resp.setStatus(403);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(403,"Requester not permitted to communicate with this endpoint")));
+            return;
+        }
+        try {
+            NewReimbursementRequest requestBody = jsonMapper.readValue(req.getInputStream(), NewReimbursementRequest.class);
+            requestBody.setReimbursement_id(requester.getId());
+            ResourceCreationResponse responseBody = reimbursementService.create(requestBody);
+            resp.getWriter().write(jsonMapper.writeValueAsString(requestBody));
+        }catch (InvalidRequestException | JsonMappingException e){
+            resp.setStatus(400);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(400,e.getMessage())));
+            e.printStackTrace();
+        }catch (ResourceNotFoundException e){
+            resp.setStatus(409);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(409, e.getMessage())));
+        } catch (DataSourceException e){
+            resp.setStatus(500);
+            resp.getWriter().write(jsonMapper.writeValueAsString(new ErrorResponse(500, e.getMessage())));
+        }
 
-        resp.getWriter().write("Post to reimbursement work");
+      //  resp.getWriter().write("Post to reimbursement work");
 
     }
 
